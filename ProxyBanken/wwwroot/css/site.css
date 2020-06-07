@@ -1,0 +1,21 @@
+﻿#mainNav {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: bold;
+}
+
+body {
+    /*    padding-top: 65px;*/
+    background-color: #f9fbfd;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+}
+
+main {
+    padding-top: 12px
+}
+
+td {
+    font-size: 12px;
+}

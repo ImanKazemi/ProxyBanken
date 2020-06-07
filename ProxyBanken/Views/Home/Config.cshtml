@@ -1,0 +1,15 @@
+﻿@model ConfigModel
+@{
+    Layout = null;
+}
+
+<form method="post" action="/home/config">
+    <div class="form-group">
+        <label for="UpdateInterval" class="col-form-label"> @Html.DisplayNameFor(x => x.UpdateInterval)</label>
+        @Html.EditorFor(x => x.UpdateInterval, new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+    <div class="form-group">
+        <label for="DeleteInterval" class="col-form-label"> @Html.DisplayNameFor(x => x.DeleteInterval)</label>
+        @Html.EditorFor(x => x.DeleteInterval, new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+</form>

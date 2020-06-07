@@ -34,11 +34,13 @@ namespace ProxyBanken
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IProxyRepository), typeof(ProxyRepository));
             services.AddScoped(typeof(IProxyTestRepository), typeof(ProxyTestRepository));
+            services.AddScoped(typeof(IConfigRepository), typeof(ConfigRepository));
 
             services.AddTransient<IProxyService, ProxyService>();
             services.AddTransient<IProxyProviderService, ProxyProviderService>();
             services.AddTransient<IProxyTestUrlService, ProxyTestUrlService>();
             services.AddTransient<IProxyTestService, ProxyTestService>();
+            services.AddTransient<IConfigService, ConfigService>();
 
             IMvcBuilder builder = services.AddRazorPages();
             services.AddHostedService<ProxyUpdateHostedService>();

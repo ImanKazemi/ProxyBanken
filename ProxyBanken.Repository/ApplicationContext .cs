@@ -22,6 +22,7 @@ namespace ProxyBanken.Repository
             new ProxyProviderMap(modelBuilder.Entity<ProxyProvider>());
             new ProxyTestMap(modelBuilder.Entity<ProxyTest>());
             new ProxyTestUrlMap(modelBuilder.Entity<ProxyTestUrl>());
+            new ConfigMap(modelBuilder.Entity<Config>());
         }
     }
 }

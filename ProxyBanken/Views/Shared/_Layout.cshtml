@@ -68,7 +68,8 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - ProxyBanken - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2020 - ProxyBanken -
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -85,20 +86,21 @@
         $("#@ViewContext.RouteData.Values["action"]").addClass('active');
         $("#configBody").load("/home/config");
 
-        $("#modalSave").on('click',
-            function () {
-                $("#BaseModal").find('form').submit();
-            });
-        //$('#BaseModal').on('show.bs.modal',
-        //    function(event) {
-        //        var button = $(event.relatedTarget); // Button that triggered the modal
-        //        //var recipient = button.data('whatever') // Extract info from data-* attributes
-        //        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        //        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        //        var modal = $(this);
-        //        modal.find('form').submit();
-        //    });
-
+        $("#modalSave").on('click',function () {
+            var form = $("#BaseModal").find('form');
+                $.ajax({
+                    url: $(form).attr('action'),
+                    data: form.serialize(),
+                    type: 'POST',
+                    success: function (data) {
+                        if (data == true) {
+                            $("#BaseModal").modal('hide');
+                        } else {
+                            alert("an error ocurred");
+                        }
+                    }
+                });
+        });
     </script>
 
 </body>

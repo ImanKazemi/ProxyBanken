@@ -24,16 +24,18 @@ namespace ProxyBanken.BackgroundService
 
         public override async Task ExecuteInScope(IServiceProvider serviceProvider, CancellationToken stoppingToken)
         {
-            
+
             _logger.LogInformation("Starting Hosted service");
-           
-           
+
+
             //while (!stoppingToken.IsCancellationRequested)
             while (stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Hosted service executing - {0}", DateTime.Now);
                 var proxyProviderService = serviceProvider.GetRequiredService<IProxyProviderService>();
                 var serviceProviders = proxyProviderService.GetBaseProxies();
+
+                var configService = serviceProvider.GetRequiredService<IConfigService>();
 
                 Parallel.ForEach(serviceProviders, provider =>
                 {
@@ -70,7 +72,7 @@ namespace ProxyBanken.BackgroundService
 
                 });
                 proxyProviderService.SaveChanges();
-                await Task.Delay(TimeSpan.FromMinutes(double.Parse(Configuration["BackgroundService:ProxyUpdateInterval"])), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(double.Parse(configService.GetByName("ProxyUpdateInterval").Value)), stoppingToken);
             }
         }
     }

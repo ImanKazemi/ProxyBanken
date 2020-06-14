@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Helper;
 using ProxyBanken.Service.Interface;
 using System;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ProxyBanken.DataAccess.Entity;
 
 namespace ProxyBanken.BackgroundService
 {

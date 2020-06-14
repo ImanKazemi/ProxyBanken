@@ -1,7 +1,7 @@
-﻿using ProxyBanken.Service.Interface;
-using System.Collections.Generic;
-using ProxyBanken.DataAccess.Entity;
+﻿using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Repository.Interface;
+using ProxyBanken.Service.Interface;
+using System.Collections.Generic;
 
 namespace ProxyBanken.Service.Implementation
 {

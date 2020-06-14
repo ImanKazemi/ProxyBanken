@@ -7,7 +7,7 @@ namespace ProxyBanken.DataAccess.Map
     {
         public ProxyTestMap(EntityTypeBuilder<ProxyTest> entityBuilder)
         {
-            entityBuilder.HasKey(p => p.Id);          
+            entityBuilder.HasKey(p => p.Id);
         }
     }
 }

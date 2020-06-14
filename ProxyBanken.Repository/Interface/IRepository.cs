@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ProxyBanken.DataAccess.Entity;
+﻿using ProxyBanken.DataAccess.Entity;
+using System.Collections.Generic;
 
 namespace ProxyBanken.Repository.Interface
 {
@@ -7,7 +7,7 @@ namespace ProxyBanken.Repository.Interface
     {
         T Get(int id);
         IEnumerable<T> GetAll();
-        T Update(T entity); 
+        T Update(T entity);
         int Insert(T entity);
         int Count();
         int Delete(int id);

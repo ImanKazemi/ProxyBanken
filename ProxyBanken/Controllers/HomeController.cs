@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Helper;
 using ProxyBanken.Models;
 using ProxyBanken.Service.Interface;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ProxyBanken.Controllers
 {

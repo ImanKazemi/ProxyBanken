@@ -1,5 +1,4 @@
 ﻿using System;
-using ProxyBanken.DataAccess.Map;
 
 namespace ProxyBanken.DataAccess.Entity
 {

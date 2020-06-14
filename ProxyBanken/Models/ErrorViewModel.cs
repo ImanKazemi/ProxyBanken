@@ -1,5 +1,3 @@
-using System;
-
 namespace ProxyBanken.Models
 {
     public class ErrorViewModel

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProxyBanken.BackgroundService;
-using ProxyBanken.Helper;
 using ProxyBanken.Repository;
 using ProxyBanken.Repository.Implementation;
 using ProxyBanken.Repository.Interface;

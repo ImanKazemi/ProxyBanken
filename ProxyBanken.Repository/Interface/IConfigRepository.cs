@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ProxyBanken.DataAccess.Entity;
+﻿using ProxyBanken.DataAccess.Entity;
+using System.Collections.Generic;
 
 namespace ProxyBanken.Repository.Interface
 {

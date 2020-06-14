@@ -35,16 +35,6 @@ namespace ProxyBanken.Controllers
             return View();
         }
 
-        public IActionResult ProxyProvider()
-        {
-            return View();
-        }
-
-        public IActionResult ProxyTestServer()
-        {
-            return View();
-        }
-
         public IActionResult Config()
         {
             ConfigModel config = new ConfigModel

@@ -7,5 +7,11 @@ namespace ProxyBanken.Service.Interface
     {
         List<ProxyTestUrl> GetTestUrls();
         int Count();
+        ProxyTestUrl Get(int id);
+        int Update(ProxyTestUrl proxyTestUrl);
+        int Create(ProxyTestUrl proxyTestUrl);
+        int Delete(int id);
+        int SaveChanges();
+
     }
 }

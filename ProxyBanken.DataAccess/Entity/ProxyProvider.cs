@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using ProxyBanken.DataAccess.Entity;
 
-namespace ProxyBanken.DataAccess.Map
+namespace ProxyBanken.DataAccess.Entity
 {
     public class ProxyProvider : BaseEntity
     {

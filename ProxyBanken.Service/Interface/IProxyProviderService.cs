@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ProxyBanken.DataAccess.Map;
+using ProxyBanken.DataAccess.Entity;
 
 namespace ProxyBanken.Service.Interface
 {
@@ -7,7 +7,9 @@ namespace ProxyBanken.Service.Interface
     {
         IEnumerable<ProxyProvider> GetBaseProxies();
         ProxyProvider GetProxyProvider(int id);
-        ProxyProvider Update(ProxyProvider proxyProvider);
+        int Update(ProxyProvider proxyProvider);
+        int Create(ProxyProvider proxyProvider);
+        int Delete(int id);
         int Count();
         int SaveChanges();
     }

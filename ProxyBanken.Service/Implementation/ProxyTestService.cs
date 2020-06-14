@@ -18,10 +18,6 @@ namespace ProxyBanken.Service.Implementation
         {
             _proxyTestRepository.BatchUpdate(proxyTests);
         }
-        //public int Count()
-        //{
-        //    return _proxyTestRepository.Count();
-        //}
 
         public IEnumerable<ProxyTest> GetProxies()
         {

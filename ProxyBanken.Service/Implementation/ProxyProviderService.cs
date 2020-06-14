@@ -1,6 +1,6 @@
 ﻿using ProxyBanken.Service.Interface;
 using System.Collections.Generic;
-using ProxyBanken.DataAccess.Map;
+using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Repository.Interface;
 
 namespace ProxyBanken.Service.Implementation
@@ -33,9 +33,20 @@ namespace ProxyBanken.Service.Implementation
             return _repository.SaveChanges();
         }
 
-        public ProxyProvider Update(ProxyProvider proxyProvider)
+        public int Update(ProxyProvider proxyProvider)
         {
-            return _repository.Update(proxyProvider);
+            _repository.Update(proxyProvider);
+            return SaveChanges();
+        }
+
+        public int Create(ProxyProvider proxyProvider)
+        {
+            return _repository.Insert(proxyProvider);
+        }
+
+        public int Delete(int id)
+        {
+            return _repository.Delete(id);
         }
     }
 }

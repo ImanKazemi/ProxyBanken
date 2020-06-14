@@ -9,10 +9,10 @@ namespace ProxyBanken.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProxyController : Controller
+    public class ProxyApiController : Controller
     {
         private readonly IProxyService _proxyService;
-        public ProxyController(IProxyService proxyService)
+        public ProxyApiController(IProxyService proxyService)
         {
             this._proxyService = proxyService;
         }

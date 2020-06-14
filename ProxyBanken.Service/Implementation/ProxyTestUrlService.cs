@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ProxyBanken.DataAccess.Entity;
-using ProxyBanken.Repository;
 using ProxyBanken.Repository.Interface;
 using ProxyBanken.Service.Interface;
 
@@ -25,6 +22,32 @@ namespace ProxyBanken.Service.Implementation
         public int Count()
         {
             return _proxyTestUrlRepository.Count();
+        }
+
+        public ProxyTestUrl Get(int id)
+        {
+            return _proxyTestUrlRepository.Get(id);
+        }
+
+        public int Update(ProxyTestUrl proxyTestUrl)
+        {
+            _proxyTestUrlRepository.Update(proxyTestUrl);
+            return SaveChanges();
+        }
+
+        public int Create(ProxyTestUrl proxyTestUrl)
+        {
+            return _proxyTestUrlRepository.Insert(proxyTestUrl);
+        }
+
+        public int Delete(int id)
+        {
+            return _proxyTestUrlRepository.Delete(id);
+        }
+
+        public int SaveChanges()
+        {
+            return _proxyTestUrlRepository.SaveChanges();
         }
     }
 }

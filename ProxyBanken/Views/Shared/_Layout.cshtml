@@ -29,10 +29,10 @@
                             <a class="nav-link" id="ProxyProvider" href="/Home/ProxyProvider">Providers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="ProxyTestServer" href="/Home/ProxyTestServer">Test Servers</a>
+                            <a class="nav-link" id="ProxyTestServer"  href="/Home/ProxyTestServer">Test Servers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="Configuration" data-toggle="modal" data-target="#BaseModal">Configuration</a>
+                            <a class="nav-link" id="Configuration" data-remote="/home/config" data-toggle="modal" data-target="#BaseModal">Configuration</a>
                         </li>
                     </ul>
                 </div>
@@ -50,7 +50,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Sync Configuration</h5>
+                    <h5 class="modal-title"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -94,6 +94,10 @@
                     type: 'POST',
                     success: function (data) {
                         if (data == true) {
+                            var table = $('.table').DataTable();
+                                if (table) {
+                                    table.ajax.reload();
+                                }
                             $("#BaseModal").modal('hide');
                         } else {
                             alert("an error ocurred");

@@ -28,7 +28,7 @@ namespace ProxyBanken.Repository.Implementation
         {
             _entities.Attach(entity);
             var entry = _context.Entry(entity);
-            entry.State = EntityState.Modified;           
+            entry.State = EntityState.Modified;
             return entity;
         }
 
@@ -39,6 +39,19 @@ namespace ProxyBanken.Repository.Implementation
 
         public int SaveChanges()
         {
+            return _context.SaveChanges();
+        }
+
+        public int Insert(T entity)
+        {
+            _entities.Add(entity);
+            return SaveChanges();
+        }
+
+        public int Delete(int id)
+        {
+            var entity = _entities.Find(id);
+            _entities.Remove(entity);
             return _context.SaveChanges();
         }
     }

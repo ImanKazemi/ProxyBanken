@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProxyBanken.DataAccess.Entity;
 
 namespace ProxyBanken.DataAccess.Map
 {

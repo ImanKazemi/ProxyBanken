@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Service.Interface;
-using System.Linq;
 
 namespace ProxyBanken.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ProxyProviderController : Controller
     {
         private readonly IProxyProviderService _proxyProviderService;
@@ -15,18 +13,50 @@ namespace ProxyBanken.Controllers
             _proxyProviderService = proxyProviderService;
         }
 
-        public IActionResult Get()
+        public IActionResult Index()
         {
-            var result = _proxyProviderService.GetBaseProxies();
-
-            return Json(new
-            {
-                recordsTotal = result.Count(),
-                recordsFiltered = result.Count(),
-                data = result.ToList()
-            });
+            return View();
         }
+
+        public IActionResult Insert(int? id)
+        {
+            var provider = new ProxyProvider();
+
+            if (id.HasValue)
+            {
+                provider = _proxyProviderService.GetProxyProvider(id.Value);
+            }
+
+            return View(provider);
+        }
+
+        [HttpPost]
+        public IActionResult Insert(ProxyProvider proxy)
+        {
+            if (proxy.Id > 0)
+            {
+                _proxyProviderService.Update(proxy);
+            }
+            else
+            {
+                _proxyProviderService.Create(proxy);
+            }
+
+            return Json(true);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var provider = _proxyProviderService.GetProxyProvider(id);
+            return View(provider);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(ProxyProvider proxy)
+        {
+            _proxyProviderService.Delete(proxy.Id);
+            return Json(true);
+        }
+
     }
-
 }
-

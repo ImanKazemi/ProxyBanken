@@ -19,3 +19,12 @@ main {
 td {
     font-size: 12px;
 }
+
+.font-sm{
+    font-size:12px!important;
+}
+
+.card-body{
+    overflow-x:auto;
+}
+

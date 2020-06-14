@@ -63,12 +63,12 @@
                         <div class="col-auto">
                             <i class="material-icons">done_all</i>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
 
         </div>
-    </div> 
+    </div>
 
     <div class="row mt-4">
         <div class="card col-12">
@@ -109,6 +109,7 @@
                 // Paging Setups
                 paging: true,
                 displayStart: 0,
+                "order": [[4, "desc"]],
                 // Searching Setups
                 searching: { regex: true },
                 // Ajax Filter
@@ -167,8 +168,10 @@
                 // Column Definitions
                 columnDefs: [
                     { targets: "no-sort", orderable: false },
-                    { targets: "port", orderable: false }
-                ]
+                    { targets: "lastFunctionalityTestDate", orderable: false },
+                 ]
+
+
             });
 
             $.ajax("/home/proxycount").done(function (data) {

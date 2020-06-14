@@ -1,4 +1,5 @@
 ﻿using ProxyBanken.DataAccess.Entity;
+using ProxyBanken.Infrastructure.Model;
 using ProxyBanken.Repository.Interface;
 using ProxyBanken.Service.Interface;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ namespace ProxyBanken.Service.Implementation
             return _proxyRepository.Get(id);
         }
 
-
         public void BatchCreateOrUpdate(IList<Proxy> proxies)
         {
             _proxyRepository.BatchUpdate(proxies);
@@ -34,9 +34,9 @@ namespace ProxyBanken.Service.Implementation
 
         }
 
-        public IEnumerable<Proxy> GetPagedProxies(int start, int length)
+        public FilteredDataModel<Proxy> GetPagedProxies(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy)
         {
-            return _proxyRepository.GetPaged(start, length);
+            return _proxyRepository.GetPaged(start, length, orderCriteria, orderAscendingDirection, searchBy);
 
         }
 

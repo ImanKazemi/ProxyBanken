@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProxyBanken.DataAccess.Entity;
+using ProxyBanken.Infrastructure.Extention;
+using ProxyBanken.Infrastructure.Model;
 using ProxyBanken.Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -63,9 +65,25 @@ namespace ProxyBanken.Repository.Implementation
             }
         }
 
-        public IEnumerable<Proxy> GetPaged(int start, int length)
+        public FilteredDataModel<Proxy> GetPaged(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy)
         {
-            return _context.Set<Proxy>().AsQueryable().Skip(start).Take(length).ToList();
+            var query = _context.Set<Proxy>().AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToUpper();
+                query = query.Where(x => (x.CreatedOn != null && x.CreatedOn.ToString().ToUpper().Contains(searchBy)) ||
+                (x.Ip != null && x.Ip.ToUpper().Contains(searchBy)) ||
+                x.Port.ToString().ToUpper().Contains(searchBy) ||
+                (x.ModifiedOn != null && x.ModifiedOn.ToString().ToUpper().Contains(searchBy)) ||
+                (x.LastFunctionalityTestDate != null && x.LastFunctionalityTestDate.ToString().ToUpper().Contains(searchBy)));
+            }
+
+
+            query = orderAscendingDirection ? query.OrderByDynamic(orderCriteria, DtOrderDir.Asc) : query.OrderByDynamic(orderCriteria, DtOrderDir.Desc);
+
+            var result = query.Skip(start).Take(length).ToList();
+            return new FilteredDataModel<Proxy>(result, query.Count(), Count());
         }
 
 
@@ -81,5 +99,7 @@ namespace ProxyBanken.Repository.Implementation
 
             _context.SaveChanges();
         }
+
+
     }
 }

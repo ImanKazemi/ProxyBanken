@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Converters;
 using ProxyBanken.BackgroundService;
 using ProxyBanken.Repository;
 using ProxyBanken.Repository.Implementation;
@@ -27,10 +28,12 @@ namespace ProxyBanken
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),ServiceLifetime.Transient);
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IProxyRepository), typeof(ProxyRepository));
             services.AddScoped(typeof(IProxyTestRepository), typeof(ProxyTestRepository));
+            services.AddScoped(typeof(IProxyProviderRepository), typeof(ProxyProviderRepository));
+            services.AddScoped(typeof(IProxyTestUrlRepository), typeof(ProxyTestUrlRepository));
             services.AddScoped(typeof(IConfigRepository), typeof(ConfigRepository));
 
             services.AddTransient<IProxyService, ProxyService>();
@@ -42,6 +45,14 @@ namespace ProxyBanken
             IMvcBuilder builder = services.AddRazorPages();
             services.AddHostedService<ProxyUpdateHostedService>();
             services.AddHostedService<ProxyDeleteHostedService>();
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                });
+
+            services.AddRazorPages();
 
 #if DEBUG
             if (Env.IsDevelopment())

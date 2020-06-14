@@ -25,7 +25,7 @@ namespace ProxyBanken.BackgroundService
             _logger.LogInformation("Starting Hosted service");
 
             //while (!stoppingToken.IsCancellationRequested)
-            while (!stoppingToken.IsCancellationRequested)
+            while (stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Hosted service executing - {0}", DateTime.Now);
                 var proxyProviderService = serviceProvider.GetRequiredService<IProxyProviderService>();

@@ -1,5 +1,7 @@
 ﻿using ProxyBanken.DataAccess.Entity;
+using ProxyBanken.Infrastructure.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProxyBanken.Repository.Interface
 {
@@ -12,5 +14,6 @@ namespace ProxyBanken.Repository.Interface
         int Count();
         int Delete(int id);
         int SaveChanges();
+        Task<int> CountAsync();
     }
 }

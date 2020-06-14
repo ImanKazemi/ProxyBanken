@@ -1,4 +1,5 @@
 ﻿using ProxyBanken.DataAccess.Entity;
+using ProxyBanken.Infrastructure.Model;
 using ProxyBanken.Repository.Interface;
 using ProxyBanken.Service.Interface;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ namespace ProxyBanken.Service.Implementation
 {
     public class ProxyTestUrlService : IProxyTestUrlService
     {
-        private static IRepository<ProxyTestUrl> _proxyTestUrlRepository;
+        private static IProxyTestUrlRepository _proxyTestUrlRepository;
 
-        public ProxyTestUrlService(IRepository<ProxyTestUrl> proxyTestUrlRepository)
+        public ProxyTestUrlService(IProxyTestUrlRepository proxyTestUrlRepository)
         {
             _proxyTestUrlRepository = proxyTestUrlRepository;
         }
@@ -48,6 +49,11 @@ namespace ProxyBanken.Service.Implementation
         public int SaveChanges()
         {
             return _proxyTestUrlRepository.SaveChanges();
+        }
+
+        public FilteredDataModel<ProxyTestUrl> GetFiltered(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy)
+        {
+            return _proxyTestUrlRepository.GetFiltered(start, length, orderCriteria, orderAscendingDirection, searchBy);
         }
     }
 }

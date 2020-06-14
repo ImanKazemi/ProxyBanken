@@ -1,4 +1,5 @@
 ﻿using ProxyBanken.DataAccess.Entity;
+using ProxyBanken.Infrastructure.Model;
 using System.Collections.Generic;
 
 namespace ProxyBanken.Repository.Interface
@@ -7,7 +8,7 @@ namespace ProxyBanken.Repository.Interface
     {
         Proxy GetProxyByIpPort(string ip, int port);
         void BatchUpdate(IList<Proxy> proxies);
-        IEnumerable<Proxy> GetPaged(int start, int length);
+        FilteredDataModel<Proxy> GetPaged(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy);
         void DeleteObsoleteProxy(int days);
     }
 }

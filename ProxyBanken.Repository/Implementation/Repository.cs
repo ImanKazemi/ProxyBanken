@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProxyBanken.DataAccess.Entity;
+using ProxyBanken.Infrastructure.Model;
 using ProxyBanken.Repository.Interface;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProxyBanken.Repository.Implementation
 {
@@ -37,6 +39,10 @@ namespace ProxyBanken.Repository.Implementation
             return _entities.Count();
         }
 
+        public async Task<int> CountAsync()
+        {
+            return await _entities.CountAsync();
+        }
         public int SaveChanges()
         {
             return _context.SaveChanges();

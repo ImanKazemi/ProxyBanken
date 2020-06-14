@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using ProxyBanken.DataAccess.Entity;
 
 namespace ProxyBanken.BackgroundService
@@ -15,11 +14,9 @@ namespace ProxyBanken.BackgroundService
     public class ProxyUpdateHostedService : ScopedBackgroundService
     {
         private readonly ILogger<ProxyUpdateHostedService> _logger;
-        private readonly IConfiguration Configuration;
-        public ProxyUpdateHostedService(IServiceScopeFactory serviceScopeFactory, ILogger<ProxyUpdateHostedService> logger, IConfiguration configuration) : base(serviceScopeFactory)
+        public ProxyUpdateHostedService(IServiceScopeFactory serviceScopeFactory, ILogger<ProxyUpdateHostedService> logger) : base(serviceScopeFactory)
         {
             _logger = logger;
-            Configuration = configuration;
         }
 
         public override async Task ExecuteInScope(IServiceProvider serviceProvider, CancellationToken stoppingToken)
@@ -27,9 +24,8 @@ namespace ProxyBanken.BackgroundService
 
             _logger.LogInformation("Starting Hosted service");
 
-
             //while (!stoppingToken.IsCancellationRequested)
-            while (stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Hosted service executing - {0}", DateTime.Now);
                 var proxyProviderService = serviceProvider.GetRequiredService<IProxyProviderService>();

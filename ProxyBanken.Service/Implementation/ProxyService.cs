@@ -39,5 +39,10 @@ namespace ProxyBanken.Service.Implementation
             return _proxyRepository.GetPaged(start, length);
 
         }
+
+        public void DeleteObsoleteProxy(int days)
+        {
+            _proxyRepository.DeleteObsoleteProxy(days);
+        }
     }
 }

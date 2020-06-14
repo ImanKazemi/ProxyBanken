@@ -24,7 +24,7 @@ namespace ProxyBanken.Repository.Implementation
 
         public void BatchUpdate(IList<Proxy> proxies)
         {
-            if(proxies == null || proxies.Count == 0)
+            if (proxies == null || proxies.Count == 0)
             {
                 return;
             }
@@ -68,9 +68,18 @@ namespace ProxyBanken.Repository.Implementation
             return _context.Set<Proxy>().AsQueryable().Skip(start).Take(length).ToList();
         }
 
-        public int Count()
+
+        public void DeleteObsoleteProxy(int days)
         {
-            return _context.Set<Proxy>().Count();
+            var dateOfDeletation = DateTime.Now.AddDays(days * -1);
+            var proxies = _context.Set<Proxy>().Where(x => x.LastFunctionalityTestDate <= dateOfDeletation || (x.LastFunctionalityTestDate == null && x.ModifiedOn <= dateOfDeletation)).ToList();
+
+            foreach (var proxy in proxies)
+            {
+                _context.Remove(proxy);
+            }
+
+            _context.SaveChanges();
         }
     }
 }

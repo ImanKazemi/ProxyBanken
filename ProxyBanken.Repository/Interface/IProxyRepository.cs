@@ -8,6 +8,6 @@ namespace ProxyBanken.Repository.Interface
         Proxy GetProxyByIpPort(string ip, int port);
         void BatchUpdate(IList<Proxy> proxies);
         IEnumerable<Proxy> GetPaged(int start, int length);
-        int Count();
+        void DeleteObsoleteProxy(int days);
     }
 }

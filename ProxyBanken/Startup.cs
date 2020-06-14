@@ -28,8 +28,6 @@ namespace ProxyBanken
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddControllersWithViews();
-
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IProxyRepository), typeof(ProxyRepository));
@@ -44,6 +42,7 @@ namespace ProxyBanken
 
             IMvcBuilder builder = services.AddRazorPages();
             services.AddHostedService<ProxyUpdateHostedService>();
+            services.AddHostedService<ProxyDeleteHostedService>();
 
 #if DEBUG
             if (Env.IsDevelopment())

@@ -13,7 +13,6 @@ namespace ProxyBanken.Service.Implementation
             _proxyTestRepository = proxyTestRepository;
         }
 
-
         public void BatchCreateOrUpdate(IList<ProxyTest> proxyTests)
         {
             _proxyTestRepository.BatchUpdate(proxyTests);
@@ -22,8 +21,11 @@ namespace ProxyBanken.Service.Implementation
         public IEnumerable<ProxyTest> GetProxies()
         {
             return _proxyTestRepository.GetAll();
-
         }
 
+        public IList<ProxyTest> GetProxyTests(int proxyId)
+        {
+            return _proxyTestRepository.GetProxyTests(proxyId);
+        }
     }
 }

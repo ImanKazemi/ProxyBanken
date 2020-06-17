@@ -18,8 +18,13 @@ main {
 
 td {
     font-size: 12px;
+    text-align:center;
 }
 
+th {
+    font-size: 12px;
+    text-align: center;
+}
 .font-sm{
     font-size:12px!important;
 }
@@ -28,3 +33,6 @@ td {
     overflow-x:auto;
 }
 
+td.details-control {
+    cursor: pointer;
+}

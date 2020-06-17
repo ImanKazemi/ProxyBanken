@@ -74,14 +74,16 @@
         <div class="card col-12">
             <div class="card-body">
                 <h5 class="card-title">Proxy List</h5>
-                <table id="example" class="table table-striped table-hover" style="width:100%">
+                <table id="proxyListTable" class="table table-striped table-hover" style="width:100%">
                     <thead class="thead-dark">
                         <tr>
+                            <th></th>
                             <th>Ip</th>
                             <th>Port</th>
                             <th>First Found</th>
                             <th>Last Found</th>
                             <th>Last Success Test</th>
+                            <th>Anonymity</th>
                         </tr>
                     </thead>
                 </table>
@@ -99,7 +101,7 @@
             $.fn.dataTable.moment("DD/MM/YYYY HH:mm:ss");
             $.fn.dataTable.moment("DD/MM/YYYY");
 
-            $('#example').DataTable({
+            var table = $('#proxyListTable').DataTable({
                 // Design Assets
                 stateSave: true,
                 autoWidth: true,
@@ -109,7 +111,7 @@
                 // Paging Setups
                 paging: true,
                 displayStart: 0,
-                "order": [[4, "desc"]],
+                "order": [[5, "desc"]],
                 // Searching Setups
                 searching: { regex: true },
                 // Ajax Filter
@@ -124,6 +126,13 @@
                 },
                 // Columns Setups
                 columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<span class="material-icons">keyboard_arrow_right</span >'
+                    },
+
                     { data: "ip" },
                     { data: "port" },
                     {
@@ -163,16 +172,41 @@
                             var now = moment(new Date());
                             return now.diff(lastDate, 'minute') + ' minutes ago';
                         }
+                    },
+                    {
+                        data: "anonymity",
+                        render: function (data, type, row) {
+
+                            return data;
+                        }
                     }
                 ],
-                // Column Definitions
-                columnDefs: [
-                    { targets: "no-sort", orderable: false },
-                    { targets: "lastFunctionalityTestDate", orderable: false },
-                 ]
+            });
 
+            $('#proxyListTable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    $(this).html('<span class="material-icons">keyboard_arrow_right</span >');
+                }
+                else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    $(this).html('<span class="material-icons">keyboard_arrow_down</span >');
+                }
 
             });
+
+            function format(d) {
+                console.log(d.id);
+                //return "";
+                $.get("/Home/ProxyTest?proxyId=" + d.id, function (data) {
+                    html = data;
+                });
+                return html;
+            }
 
             $.ajax("/home/proxycount").done(function (data) {
                 $("#proxyCount").text(data);

@@ -1,8 +1,11 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using ProxyBanken.DataAccess.Entity;
+using ProxyBanken.Infrastructure.Enum;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -37,10 +40,10 @@ namespace ProxyBanken.Helper
                     proxy.LastFunctionalityTestDate = pingDate.Value;
                 }
 
+                proxy.Anonymity = checkAnonymity(proxy.Ip, proxy.Port);
 
             });
 
-            //CheckConnectivity("80.25.87.49", 47478, "www.google.com");
             return proxies;
         }
 
@@ -132,6 +135,62 @@ namespace ProxyBanken.Helper
             });
 
             return proxyTestList;
+        }
+
+        public static ProxyAnonymity checkAnonymity(string ip, int port)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://headers.jsontest.com/");
+                request.Method = "GET";
+                request.Timeout = 4000;
+                request.ContentType = "application/json; charset=utf-8";
+                WebProxy proxy = new WebProxy(ip, port);
+                request.Proxy = proxy;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    string result;
+                    using (var sr = new StreamReader(response.GetResponseStream()))
+                    {
+                        result = sr.ReadToEnd();
+                    }
+
+                    var jResultObject = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
+
+                    if (jResultObject.ContainsKey("Authorization") ||
+                        jResultObject.ContainsKey("From") ||
+                        jResultObject.ContainsKey("Proxy-Authorization") ||
+                        jResultObject.ContainsKey("Proxy-Connection") ||
+                        jResultObject.ContainsKey("Via") ||
+                        jResultObject.ContainsKey("X-Forwarded-For")
+                        )
+                    {
+                        if (!jResultObject.ContainsKey("X-Forwarded-For"))
+                        {
+                            return ProxyAnonymity.Anonymous;
+                        }
+                        else
+                        {
+                            return ProxyAnonymity.Transparent;
+                        }
+                    }
+                    else
+                    {
+                        return ProxyAnonymity.Elite;
+                    }
+
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+            }
+            return ProxyAnonymity.Unknown;
+
         }
     }
 }

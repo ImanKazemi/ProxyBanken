@@ -49,5 +49,11 @@ namespace ProxyBanken.Repository.Implementation
 
             }
         }
+
+        public IList<ProxyTest> GetProxyTests(int proxyId)
+        {
+            var proxyTest = _context.Set<ProxyTest>().Where(x => x.ProxyId == proxyId).Include(x => x.ProxyTestUrl).ToList();
+            return proxyTest;
+        }
     }
 }

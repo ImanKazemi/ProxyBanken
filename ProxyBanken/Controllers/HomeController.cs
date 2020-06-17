@@ -16,13 +16,17 @@ namespace ProxyBanken.Controllers
         private readonly IProxyProviderService _proxyProviderService;
         private readonly IProxyTestUrlService _proxyTestUrlService;
         private readonly IConfigService _configService;
-        public HomeController(ILogger<HomeController> logger, IProxyService proxyService, IProxyProviderService proxyProviderService, IProxyTestUrlService proxyTestUrlService, IConfigService configService)
+        private readonly IProxyTestService _proxyTestService;
+
+        public HomeController(ILogger<HomeController> logger, IProxyService proxyService, IProxyProviderService proxyProviderService, IProxyTestUrlService proxyTestUrlService, IConfigService configService, IProxyTestService proxyTestService)
         {
             _logger = logger;
             _proxyService = proxyService;
             _proxyProviderService = proxyProviderService;
             _proxyTestUrlService = proxyTestUrlService;
             _configService = configService;
+            _proxyTestService = proxyTestService;
+
         }
 
         public IActionResult Index()
@@ -85,11 +89,18 @@ namespace ProxyBanken.Controllers
             return Json(_proxyTestUrlService.Count());
         }
 
+        [HttpGet]
+        public IActionResult ProxyTest(int proxyId)
+        {
+            var result = _proxyTestService.GetProxyTests(proxyId);
+            return View(result);
+
+        }
+
         public IActionResult Privacy()
         {
             return View();
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

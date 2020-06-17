@@ -7,5 +7,7 @@ namespace ProxyBanken.Repository.Interface
     {
         ProxyTest GetByProxyTestUrl(int proxyId, int testUrlId);
         void BatchUpdate(IList<ProxyTest> proxyTestUrl);
+        IList<ProxyTest> GetProxyTests(int proxyId);
+
     }
 }

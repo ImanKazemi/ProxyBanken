@@ -13,7 +13,7 @@
     <header>
         <nav id="mainNav" class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="/">
                     <img src="~/img/logo.png" alt="Proxy banken" style="width:169px;height:68.5px">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,28 +83,7 @@
     @RenderSection("Scripts", required: false)
 
     <script>
-        $("#@ViewContext.RouteData.Values["controller"]").addClass('active');
-        $("#configBody").load("/home/config");
-
-        $("#modalSave").on('click',function () {
-            var form = $("#BaseModal").find('form');
-                $.ajax({
-                    url: $(form).attr('action'),
-                    data: form.serialize(),
-                    type: 'POST',
-                    success: function (data) {
-                        if (data == true) {
-                            var table = $('.table').DataTable();
-                                if (table) {
-                                    table.ajax.reload();
-                                }
-                            $("#BaseModal").modal('hide');
-                        } else {
-                            alert("an error ocurred");
-                        }
-                    }
-                });
-        });
+        $("#@ViewContext.RouteData.Values["controller"]").addClass('active');       
     </script>
 
 </body>

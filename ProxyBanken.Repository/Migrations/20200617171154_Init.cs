@@ -1,12 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProxyBanken.Repository.Migrations
 {
-    public partial class initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Config",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Key = table.Column<string>(nullable: true),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Config", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ProxyProvider",
                 columns: table => new
@@ -27,7 +41,7 @@ namespace ProxyBanken.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestUrl",
+                name: "ProxyTestUrl",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -37,7 +51,7 @@ namespace ProxyBanken.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestUrl", x => x.Id);
+                    table.PrimaryKey("PK_ProxyTestUrl", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -48,6 +62,7 @@ namespace ProxyBanken.Repository.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ip = table.Column<string>(nullable: true),
                     Port = table.Column<int>(nullable: false),
+                    Anonymity = table.Column<int>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     LastFunctionalityTestDate = table.Column<DateTime>(nullable: true),
@@ -70,8 +85,9 @@ namespace ProxyBanken.Repository.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProxyId = table.Column<int>(nullable: true),
-                    TestUrlId = table.Column<int>(nullable: true)
+                    LastSuccessDate = table.Column<DateTime>(nullable: true),
+                    ProxyTestUrlId = table.Column<int>(nullable: false),
+                    ProxyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,14 +97,21 @@ namespace ProxyBanken.Repository.Migrations
                         column: x => x.ProxyId,
                         principalTable: "Proxy",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProxyTest_TestUrl_TestUrlId",
-                        column: x => x.TestUrlId,
-                        principalTable: "TestUrl",
+                        name: "FK_ProxyTest_ProxyTestUrl_ProxyTestUrlId",
+                        column: x => x.ProxyTestUrlId,
+                        principalTable: "ProxyTestUrl",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Config_Key",
+                table: "Config",
+                column: "Key",
+                unique: true,
+                filter: "[Key] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Proxy_BaseUrlId",
@@ -96,18 +119,28 @@ namespace ProxyBanken.Repository.Migrations
                 column: "BaseUrlId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Proxy_Ip_Port",
+                table: "Proxy",
+                columns: new[] { "Ip", "Port" },
+                unique: true,
+                filter: "[Ip] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProxyTest_ProxyId",
                 table: "ProxyTest",
                 column: "ProxyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProxyTest_TestUrlId",
+                name: "IX_ProxyTest_ProxyTestUrlId",
                 table: "ProxyTest",
-                column: "TestUrlId");
+                column: "ProxyTestUrlId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Config");
+
             migrationBuilder.DropTable(
                 name: "ProxyTest");
 
@@ -115,7 +148,7 @@ namespace ProxyBanken.Repository.Migrations
                 name: "Proxy");
 
             migrationBuilder.DropTable(
-                name: "TestUrl");
+                name: "ProxyTestUrl");
 
             migrationBuilder.DropTable(
                 name: "ProxyProvider");

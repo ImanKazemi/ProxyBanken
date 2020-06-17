@@ -10,8 +10,8 @@ using ProxyBanken.Repository;
 namespace ProxyBanken.Repository.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200606182719_2020.06.06-01")]
-    partial class _2020060601
+    [Migration("20200617171154_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,12 +21,37 @@ namespace ProxyBanken.Repository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.Config", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique()
+                        .HasFilter("[Key] IS NOT NULL");
+
+                    b.ToTable("Config");
+                });
+
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.Proxy", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Anonymity")
+                        .HasColumnType("int");
 
                     b.Property<int?>("BaseUrlId")
                         .HasColumnType("int");
@@ -35,7 +60,7 @@ namespace ProxyBanken.Repository.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Ip")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("LastFunctionalityTestDate")
                         .HasColumnType("datetime2");
@@ -50,53 +75,14 @@ namespace ProxyBanken.Repository.Migrations
 
                     b.HasIndex("BaseUrlId");
 
+                    b.HasIndex("Ip", "Port")
+                        .IsUnique()
+                        .HasFilter("[Ip] IS NOT NULL");
+
                     b.ToTable("Proxy");
                 });
 
-            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("LastSuccessDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ProxyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProxyTestUrlId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProxyId");
-
-                    b.HasIndex("ProxyTestUrlId");
-
-                    b.ToTable("ProxyTest");
-                });
-
-            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTestUrl", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProxyTestUrl");
-                });
-
-            modelBuilder.Entity("ProxyBanken.DataAccess.Map.ProxyProvider", b =>
+            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyProvider", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,9 +115,52 @@ namespace ProxyBanken.Repository.Migrations
                     b.ToTable("ProxyProvider");
                 });
 
+            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("LastSuccessDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProxyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProxyTestUrlId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProxyId");
+
+                    b.HasIndex("ProxyTestUrlId");
+
+                    b.ToTable("ProxyTest");
+                });
+
+            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTestUrl", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProxyTestUrl");
+                });
+
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.Proxy", b =>
                 {
-                    b.HasOne("ProxyBanken.DataAccess.Map.ProxyProvider", "BaseUrl")
+                    b.HasOne("ProxyBanken.DataAccess.Entity.ProxyProvider", "BaseUrl")
                         .WithMany("Proxies")
                         .HasForeignKey("BaseUrlId");
                 });
@@ -140,11 +169,15 @@ namespace ProxyBanken.Repository.Migrations
                 {
                     b.HasOne("ProxyBanken.DataAccess.Entity.Proxy", "Proxy")
                         .WithMany()
-                        .HasForeignKey("ProxyId");
+                        .HasForeignKey("ProxyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ProxyBanken.DataAccess.Entity.ProxyTestUrl", "ProxyTestUrl")
                         .WithMany()
-                        .HasForeignKey("ProxyTestUrlId");
+                        .HasForeignKey("ProxyTestUrlId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

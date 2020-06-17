@@ -106,6 +106,16 @@ namespace ProxyBanken.Repository.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Config",
+                columns: new[] { "Id", "Key", "Value" },
+                values: new object[] { 1, "ProxyUpdateInterval", "10" });
+
+            migrationBuilder.InsertData(
+                table: "Config",
+                columns: new[] { "Id", "Key", "Value" },
+                values: new object[] { 2, "ProxyDeleteInterval", "7" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Config_Key",
                 table: "Config",

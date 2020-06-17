@@ -10,8 +10,8 @@ using ProxyBanken.Repository;
 namespace ProxyBanken.Repository.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200617171154_Init")]
-    partial class Init
+    [Migration("20200617173621_Init2")]
+    partial class Init2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,6 +41,20 @@ namespace ProxyBanken.Repository.Migrations
                         .HasFilter("[Key] IS NOT NULL");
 
                     b.ToTable("Config");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Key = "ProxyUpdateInterval",
+                            Value = "10"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Key = "ProxyDeleteInterval",
+                            Value = "7"
+                        });
                 });
 
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.Proxy", b =>
@@ -113,6 +127,24 @@ namespace ProxyBanken.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProxyProvider");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IpQuery = "//td[1]",
+                            PortQuery = "//td[2]",
+                            RowQuery = "//table[@id='proxylisttable']/tbody/tr",
+                            Url = "https://free-proxy-list.net/"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IpQuery = "//td[1]/abbr/script",
+                            PortQuery = "//td[2]",
+                            RowQuery = "//table/tbody/tr[@data-proxy-id]",
+                            Url = "https://www.proxynova.com/proxy-server-list/"
+                        });
                 });
 
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTest", b =>

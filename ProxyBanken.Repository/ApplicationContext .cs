@@ -23,6 +23,10 @@ namespace ProxyBanken.Repository
             new ProxyTestMap(modelBuilder.Entity<ProxyTest>());
             new ProxyTestUrlMap(modelBuilder.Entity<ProxyTestUrl>());
             new ConfigMap(modelBuilder.Entity<Config>());
+
+            modelBuilder.Entity<Config>().HasData(new { Id = 1, Key = "ProxyUpdateInterval", Value = "10" }, new { Id = 2, Key = "ProxyDeleteInterval", Value = "7" }) ;
+            modelBuilder.Entity<ProxyProvider>().HasData(new { Id = 1, Url= "https://free-proxy-list.net/", RowQuery = "//table[@id='proxylisttable']/tbody/tr", IpQuery = "//td[1]", PortQuery = "//td[2]" }, new { Id = 2, Url= "https://www.proxynova.com/proxy-server-list/", RowQuery = "//table/tbody/tr[@data-proxy-id]", IpQuery = "//td[1]/abbr/script", PortQuery = "//td[2]" });
+
         }
     }
 }

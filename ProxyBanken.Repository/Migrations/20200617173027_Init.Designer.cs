@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProxyBanken.Repository;
 
 namespace ProxyBanken.Repository.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200617173027_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,24 +127,6 @@ namespace ProxyBanken.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProxyProvider");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IpQuery = "//td[1]",
-                            PortQuery = "//td[2]",
-                            RowQuery = "//table[@id='proxylisttable']/tbody/tr",
-                            Url = "https://free-proxy-list.net/"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IpQuery = "//td[1]/abbr/script",
-                            PortQuery = "//td[2]",
-                            RowQuery = "//table/tbody/tr[@data-proxy-id]",
-                            Url = "https://www.proxynova.com/proxy-server-list/"
-                        });
                 });
 
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTest", b =>

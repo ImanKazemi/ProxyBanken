@@ -109,12 +109,20 @@ namespace ProxyBanken.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Config",
                 columns: new[] { "Id", "Key", "Value" },
-                values: new object[] { 1, "ProxyUpdateInterval", "10" });
+                values: new object[,]
+                {
+                    { 1, "ProxyUpdateInterval", "10" },
+                    { 2, "ProxyDeleteInterval", "7" }
+                });
 
             migrationBuilder.InsertData(
-                table: "Config",
-                columns: new[] { "Id", "Key", "Value" },
-                values: new object[] { 2, "ProxyDeleteInterval", "7" });
+                table: "ProxyProvider",
+                columns: new[] { "Id", "Exception", "IpQuery", "LastFetchOn", "LastFetchProxyCount", "PortQuery", "RowQuery", "Url" },
+                values: new object[,]
+                {
+                    { 1, null, "//td[1]", null, null, "//td[2]", "//table[@id='proxylisttable']/tbody/tr", "https://free-proxy-list.net/" },
+                    { 2, null, "//td[1]/abbr/script", null, null, "//td[2]", "//table/tbody/tr[@data-proxy-id]", "https://www.proxynova.com/proxy-server-list/" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Config_Key",

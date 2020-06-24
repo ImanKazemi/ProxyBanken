@@ -35,12 +35,12 @@ namespace ProxyBanken
             services.AddScoped(typeof(IProxyRepository), typeof(ProxyRepository));
             services.AddScoped(typeof(IProxyTestRepository), typeof(ProxyTestRepository));
             services.AddScoped(typeof(IProxyProviderRepository), typeof(ProxyProviderRepository));
-            services.AddScoped(typeof(IProxyTestUrlRepository), typeof(ProxyTestUrlRepository));
+            services.AddScoped(typeof(IProxyTestServerRepository), typeof(ProxyTestServerRepository));
             services.AddScoped(typeof(IConfigRepository), typeof(ConfigRepository));
 
             services.AddTransient<IProxyService, ProxyService>();
             services.AddTransient<IProxyProviderService, ProxyProviderService>();
-            services.AddTransient<IProxyTestUrlService, ProxyTestUrlService>();
+            services.AddTransient<IProxyTestServerService, ProxyTestServerService>();
             services.AddTransient<IProxyTestService, ProxyTestService>();
             services.AddTransient<IConfigService, ConfigService>();
 

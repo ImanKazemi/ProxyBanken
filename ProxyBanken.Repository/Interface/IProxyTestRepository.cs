@@ -5,8 +5,8 @@ namespace ProxyBanken.Repository.Interface
 {
     public interface IProxyTestRepository : IRepository<ProxyTest>
     {
-        ProxyTest GetByProxyTestUrl(int proxyId, int testUrlId);
-        void BatchUpdate(IList<ProxyTest> proxyTestUrl);
+        ProxyTest GetByProxyTestServer(int proxyId, int testUrlId);
+        void BatchUpdate(IList<ProxyTest> ProxyTestServer);
         IList<ProxyTest> GetProxyTests(int proxyId);
 
     }

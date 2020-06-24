@@ -16,9 +16,9 @@ namespace ProxyBanken.Repository.Implementation
             _context = context;
         }
 
-        public ProxyTest GetByProxyTestUrl(int proxyId, int testUrlId)
+        public ProxyTest GetByProxyTestServer(int proxyId, int testUrlId)
         {
-            var proxyTest = _context.Set<ProxyTest>().Where(x => x.ProxyId == proxyId && x.ProxyTestUrlId == testUrlId).FirstOrDefault();
+            var proxyTest = _context.Set<ProxyTest>().Where(x => x.ProxyId == proxyId && x.ProxyTestServerId == testUrlId).FirstOrDefault();
             return proxyTest;
         }
 
@@ -28,7 +28,7 @@ namespace ProxyBanken.Repository.Implementation
             {
                 foreach (var proxyTest in proxyTests)
                 {
-                    var lastTest = GetByProxyTestUrl(proxyTest.ProxyId, proxyTest.ProxyTestUrlId);
+                    var lastTest = GetByProxyTestServer(proxyTest.ProxyId, proxyTest.ProxyTestServerId);
                     if (lastTest == null)
                     {
                         _context.Add(proxyTest);
@@ -52,7 +52,7 @@ namespace ProxyBanken.Repository.Implementation
 
         public IList<ProxyTest> GetProxyTests(int proxyId)
         {
-            var proxyTest = _context.Set<ProxyTest>().Where(x => x.ProxyId == proxyId).Include(x => x.ProxyTestUrl).ToList();
+            var proxyTest = _context.Set<ProxyTest>().Where(x => x.ProxyId == proxyId).Include(x => x.ProxyTestServer).ToList();
             return proxyTest;
         }
     }

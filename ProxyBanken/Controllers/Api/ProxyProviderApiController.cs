@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Infrastructure.Model;
 using ProxyBanken.Service.Interface;
-using System.Linq;
+using System.Net;
 
 namespace ProxyBanken.Controllers
 {
@@ -16,7 +17,7 @@ namespace ProxyBanken.Controllers
             _proxyProviderService = proxyProviderService;
         }
 
-        public IActionResult Get([FromBody] DtParameters dtParameters)
+        public IActionResult Data([FromBody] DtParameters dtParameters)
         {
             var searchBy = dtParameters.Search?.Value;
             string orderCriteria;
@@ -32,7 +33,7 @@ namespace ProxyBanken.Controllers
                 orderAscendingDirection = true;
             }
             var result = _proxyProviderService.GetFiltered(dtParameters.Start, dtParameters.Length, orderCriteria, orderAscendingDirection, searchBy);
-            
+
             return Json(new
             {
                 recordsTotal = result.Total,
@@ -40,7 +41,48 @@ namespace ProxyBanken.Controllers
                 data = result.Result
             });
         }
+
+        [Route("{id:int}")]
+        public ActionResult Get(int id)
+        {
+            var provider = _proxyProviderService.GetProxyProvider(id);
+            return Json(provider);
+        }
+
+        [HttpPost("Insert")]
+        public HttpStatusCode Insert([FromForm] ProxyProvider proxy)
+        {
+            try
+            {
+                if (proxy.Id > 0)
+                {
+                    _proxyProviderService.Update(proxy);
+                }
+                else
+                {
+                    _proxyProviderService.Create(proxy);
+                }
+                return HttpStatusCode.OK;
+
+            }
+            catch
+            {
+                return HttpStatusCode.InternalServerError;
+            }
+        }
+
+        [HttpDelete("Delete")]
+        public HttpStatusCode Delete([FromForm] int id)
+        {
+            try
+            {
+                _proxyProviderService.Delete(id);
+                return HttpStatusCode.OK;
+            }
+            catch
+            {
+                return HttpStatusCode.InternalServerError;
+            }
+        }
     }
-
 }
-

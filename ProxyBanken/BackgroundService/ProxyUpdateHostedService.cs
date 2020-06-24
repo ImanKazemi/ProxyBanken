@@ -47,8 +47,8 @@ namespace ProxyBanken.BackgroundService
                         {
                             proxyService.BatchCreateOrUpdate(proxyList);
 
-                            var proxyTestUrlService = serviceProvider.GetRequiredService<IProxyTestUrlService>();
-                            IList<ProxyTest> proxyTestResults = ProxyHelper.TestProxies(proxyList.ToList(), proxyTestUrlService.GetTestUrls());
+                            var ProxyTestServerService = serviceProvider.GetRequiredService<IProxyTestServerService>();
+                            IList<ProxyTest> proxyTestResults = ProxyHelper.TestProxies(proxyList.ToList(), ProxyTestServerService.GetTestProxies());
 
                             if (proxyTestResults.Count > 0)
                             {

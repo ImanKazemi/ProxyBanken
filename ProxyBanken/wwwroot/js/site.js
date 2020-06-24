@@ -1,23 +1,43 @@
 ﻿$(".nav-link").removeClass('active');
 
-$("#configBody").load("/home/config");
+$(document).on('click', "#configuration", function () {
+    startLoading()
+    $("#modalBody").load("/home/config");
+});
+
 
 $("#modalSave").on('click', function () {
-    var form = $("#BaseModal").find('form');
+    var form = $("#modalBody").find('form');
+    console.log(form.serialize());
     $.ajax({
         url: $(form).attr('action'),
         data: form.serialize(),
-        type: 'POST',
+        type: $(form).attr('method'),
         success: function (data) {
-            if (data == true) {
-                var table = $('.table').DataTable();
-                if (table) {
-                    table.ajax.reload();
-                }
-                $("#BaseModal").modal('hide');
-            } else {
-                alert("an error ocurred");
+            var table = $('.table').DataTable();
+            if (table) {
+                table.ajax.reload();
             }
+            $("#BaseModal").modal('hide');
+        },
+        error: function () {
+            alert("an error ocurred");
         }
     });
 });
+
+$('body').on('click', '[data-toggle="modal"]', function () {
+    startLoading()
+    $($(this).data("target") + ' .modal-body').load($(this).data("remote"));
+    $($(this).data("target") + ' .modal-title').text($(this).text());
+})
+
+function completeLoading() {
+    $("#modalLoading").hide();
+    $("#modalBody").show();
+}
+
+function startLoading() {
+    $("#modalLoading").hide();
+    $("#modalBody").show();
+}

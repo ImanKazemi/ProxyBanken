@@ -36,3 +36,8 @@ th {
 td.details-control {
     cursor: pointer;
 }
+
+#modalLoading{
+    text-align:center;
+    padding-top:10px;
+}

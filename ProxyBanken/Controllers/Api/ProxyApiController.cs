@@ -1,24 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProxyBanken.Infrastructure.Model;
 using ProxyBanken.Service.Interface;
-using System.Linq;
 
 namespace ProxyBanken.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProxyTestServerApiController : Controller
+    public class ProxyApiController : Controller
     {
-        private readonly IProxyTestUrlService _proxyTestUrlService;
-
-        public ProxyTestServerApiController(IProxyTestUrlService proxyTestUrlService)
+        private readonly IProxyService _proxyService;
+        public ProxyApiController(IProxyService proxyService)
         {
-            _proxyTestUrlService = proxyTestUrlService;
+            this._proxyService = proxyService;
         }
 
-        public IActionResult Get([FromBody] DtParameters dtParameters)
+        [HttpPost]
+        public IActionResult LoadTable([FromBody] DtParameters dtParameters)
         {
-
             var searchBy = dtParameters.Search?.Value;
             string orderCriteria;
             bool orderAscendingDirection;
@@ -29,19 +27,19 @@ namespace ProxyBanken.Controllers
             }
             else
             {
-                orderCriteria = "Name";
+                orderCriteria = "lastFunctionalityTestDate";
                 orderAscendingDirection = true;
             }
+            var result = _proxyService.GetPagedProxies(dtParameters.Start, dtParameters.Length, orderCriteria, orderAscendingDirection, searchBy);
 
-            var result = _proxyTestUrlService.GetFiltered(dtParameters.Start, dtParameters.Length, orderCriteria, orderAscendingDirection, searchBy);
             return Json(new
             {
                 recordsTotal = result.Total,
                 recordsFiltered = result.FilteredCount,
                 data = result.Result
             });
+
         }
+
     }
-
 }
-

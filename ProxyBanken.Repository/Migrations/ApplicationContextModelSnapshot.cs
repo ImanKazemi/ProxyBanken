@@ -158,19 +158,19 @@ namespace ProxyBanken.Repository.Migrations
                     b.Property<int>("ProxyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProxyTestUrlId")
+                    b.Property<int>("ProxyTestServerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProxyId");
 
-                    b.HasIndex("ProxyTestUrlId");
+                    b.HasIndex("ProxyTestServerId");
 
                     b.ToTable("ProxyTest");
                 });
 
-            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTestUrl", b =>
+            modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTestServer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -185,7 +185,7 @@ namespace ProxyBanken.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProxyTestUrl");
+                    b.ToTable("ProxyTestServer");
                 });
 
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.Proxy", b =>
@@ -203,9 +203,9 @@ namespace ProxyBanken.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProxyBanken.DataAccess.Entity.ProxyTestUrl", "ProxyTestUrl")
+                    b.HasOne("ProxyBanken.DataAccess.Entity.ProxyTestServer", "ProxyTestServer")
                         .WithMany()
-                        .HasForeignKey("ProxyTestUrlId")
+                        .HasForeignKey("ProxyTestServerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

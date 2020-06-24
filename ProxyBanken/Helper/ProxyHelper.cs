@@ -116,7 +116,7 @@ namespace ProxyBanken.Helper
 
         }
 
-        public static IList<ProxyTest> TestProxies(IList<Proxy> proxyList, IEnumerable<ProxyTestUrl> getTestUrls)
+        public static IList<ProxyTest> TestProxies(IList<Proxy> proxyList, IEnumerable<ProxyTestServer> getTestUrls)
         {
             var proxyTestList = new List<ProxyTest>();
 
@@ -127,7 +127,7 @@ namespace ProxyBanken.Helper
                     var testDateTime = CheckConnectivity(proxy.Ip, proxy.Port, testUrl.Url);
                     proxyTestList.Add(new ProxyTest
                     {
-                        ProxyTestUrlId = testUrl.Id,
+                        ProxyTestServerId = testUrl.Id,
                         ProxyId = proxy.Id,
                         LastSuccessDate = testDateTime
                     });

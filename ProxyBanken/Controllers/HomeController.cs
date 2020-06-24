@@ -11,92 +11,15 @@ namespace ProxyBanken.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IProxyService _proxyService;
-        private readonly IProxyProviderService _proxyProviderService;
-        private readonly IProxyTestUrlService _proxyTestUrlService;
-        private readonly IConfigService _configService;
-        private readonly IProxyTestService _proxyTestService;
-
-        public HomeController(ILogger<HomeController> logger, IProxyService proxyService, IProxyProviderService proxyProviderService, IProxyTestUrlService proxyTestUrlService, IConfigService configService, IProxyTestService proxyTestService)
-        {
-            _logger = logger;
-            _proxyService = proxyService;
-            _proxyProviderService = proxyProviderService;
-            _proxyTestUrlService = proxyTestUrlService;
-            _configService = configService;
-            _proxyTestService = proxyTestService;
-
-        }
-
         public IActionResult Index()
         {
-            ProxyHelper.GetUserIP(HttpContext);
             return View();
         }
 
         public IActionResult Config()
         {
-            ConfigModel config = new ConfigModel
-            {
-                UpdateInterval = int.Parse(_configService.GetByName("ProxyUpdateInterval").Value),
-                DeleteInterval = int.Parse(_configService.GetByName("ProxyDeleteInterval").Value)
-            };
-            return View(config);
+            return View();
         }
-
-        [HttpPost]
-        public IActionResult Config(ConfigModel config)
-        {
-            try
-            {
-                IList<Config> configs = new List<Config>();
-                configs.Add(new Config
-                {
-                    Key = "ProxyUpdateInterval",
-                    Value = config.UpdateInterval.ToString()
-                });
-
-                configs.Add(new Config
-                {
-                    Key = "ProxyDeleteInterval",
-                    Value = config.DeleteInterval.ToString()
-                });
-
-                _configService.BatchUpdate(configs);
-
-                return Json(true);
-            }
-            catch
-            {
-                return Json(false);
-            }
-
-        }
-
-        public IActionResult ProxyCount()
-        {
-            return Json(_proxyService.Count());
-        }
-
-        public IActionResult ProviderCount()
-        {
-            return Json(_proxyProviderService.Count());
-        }
-
-        public IActionResult TestServiceCount()
-        {
-            return Json(_proxyTestUrlService.Count());
-        }
-
-        [HttpGet]
-        public IActionResult ProxyTest(int proxyId)
-        {
-            var result = _proxyTestService.GetProxyTests(proxyId);
-            return View(result);
-
-        }
-
         public IActionResult Privacy()
         {
             return View();

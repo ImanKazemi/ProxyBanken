@@ -6,7 +6,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProxyTestUrl.Name)
+                @Html.DisplayNameFor(model => model.ProxyTestServer.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LastSuccessDate)
@@ -18,7 +18,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProxyTestUrl.Name)
+                    @Html.DisplayFor(modelItem => item.ProxyTestServer.Name)
                 </td>
                 <td>
                     @if (item.LastSuccessDate.HasValue)

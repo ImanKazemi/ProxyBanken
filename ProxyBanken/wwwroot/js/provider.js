@@ -17,7 +17,6 @@
             contentType: "application/json",
             dataType: "json",
             data: function (d) {
-                console.log(d);
                 return JSON.stringify(d);
             }
         },
@@ -28,6 +27,9 @@
                 data: "lastFetchOn",
                 render: function (data, type, row) {
                     // If display or filter data is requested, format the date
+                    if (data == null) {
+                        return "";
+                    }
                     if (type === "display" || type === "filter") {
                         return moment(data).format("ddd DD/MM/YYYY HH:mm:ss");
                     }
@@ -46,7 +48,7 @@
                 width: "152px",
                 data: "id",
                 render: function (data, type, row) {
-                    var editButton = '<div style="display:inline-flex"><button type="button" data-toggle="modal" data-remote="/proxyprovider/insert/' + data +
+                    var editButton = '<div style="display:inline-flex"><button type="button" data-toggle="modal" data-remote="/proxyprovider/edit/' + data +
                         '" data-target="#BaseModal" class="btn btn-dark btn-sm"><span class="material-icons font-sm">edit</span></button> | ';
                     var deleteButton = ' <button type="button" data-toggle="modal" data-remote="/proxyprovider/delete/' + data +
                         '" data-target="#BaseModal" class="btn btn-dark btn-sm"><span class="material-icons font-sm">delete</span></button></div>';
@@ -61,8 +63,3 @@
         ]
     });
 });
-
-$('body').on('click', '[data-toggle="modal"]', function () {
-    $($(this).data("target") + ' .modal-body').load();
-    $($(this).data("target") + ' .modal-title').text($(this).text());
-})

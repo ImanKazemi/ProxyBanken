@@ -21,7 +21,7 @@ namespace ProxyBanken.Repository
             new ProxyMap(modelBuilder.Entity<Proxy>());
             new ProxyProviderMap(modelBuilder.Entity<ProxyProvider>());
             new ProxyTestMap(modelBuilder.Entity<ProxyTest>());
-            new ProxyTestUrlMap(modelBuilder.Entity<ProxyTestUrl>());
+            new ProxyTestServerMap(modelBuilder.Entity<ProxyTestServer>());
             new ConfigMap(modelBuilder.Entity<Config>());
 
             modelBuilder.Entity<Config>().HasData(new { Id = 1, Key = "ProxyUpdateInterval", Value = "10" }, new { Id = 2, Key = "ProxyDeleteInterval", Value = "7" }) ;

@@ -10,8 +10,8 @@ using ProxyBanken.Repository;
 namespace ProxyBanken.Repository.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200617174441_Init")]
-    partial class Init
+    [Migration("20200624171924_2020.24.06")]
+    partial class _20202406
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

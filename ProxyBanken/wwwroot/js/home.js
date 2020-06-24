@@ -110,14 +110,9 @@ $(document).ready(function () {
         return html;
     }
 
-    $.ajax("/home/proxycount").done(function (data) {
-        $("#proxyCount").text(data);
-    });
-    $.ajax("/home/providerCount").done(function (data) {
-        $("#providerCount").text(data);
-    });
-
-    $.ajax("/home/TestServiceCount").done(function (data) {
-        $("#testServerCount").text(data);
+    $.ajax("/api/statisticapi").done(function (data) {
+        $("#proxyCount").text(data.proxyCount);
+        $("#providerCount").text(data.providerCount);
+        $("#testServerCount").text(data.testServerCount);
     });
 });

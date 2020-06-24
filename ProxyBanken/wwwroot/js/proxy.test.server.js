@@ -17,7 +17,6 @@
             contentType: "application/json",
             dataType: "json",
             data: function (d) {
-                console.log(d);
                 return JSON.stringify(d);
             }
         },
@@ -29,9 +28,9 @@
                 width: "150px",
                 data: "id",
                 render: function (data, type, row) {
-                    var editButton = '<div style="display:inline-flex"><button type="button" data-toggle="modal" data-remote="/proxytestserver/insert/' + data +
+                    var editButton = '<div style="display:inline-flex"><button type="button" data-toggle="modal" data-remote="/proxytestserver/edit/' + data +
                         '" data-target="#BaseModal" class="btn btn-dark btn-sm"><span class="material-icons font-sm">edit</span></button> | ';
-                    var deleteButton = ' <button type="button" data-toggle="modal" data-remote="/ProxyTestServer/delete/' + data +
+                    var deleteButton = ' <button type="button" data-toggle="modal" data-remote="/proxytestserver/delete/' + data +
                         '" data-target="#BaseModal" class="btn btn-dark btn-sm"><span class="material-icons font-sm">delete</span></button></div>';
 
                     return editButton + deleteButton;
@@ -45,9 +44,5 @@
         ]
     });
 
-    $('body').on('click', '[data-toggle="modal"]', function () {
-        $($(this).data("target") + ' .modal-body').load($(this).data("remote"));
-        $($(this).data("target") + ' .modal-title').text($(this).text());
-    })
 
 });

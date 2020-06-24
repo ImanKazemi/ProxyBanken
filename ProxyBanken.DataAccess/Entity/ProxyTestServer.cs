@@ -2,7 +2,7 @@
 
 namespace ProxyBanken.DataAccess.Entity
 {
-    public class ProxyTestUrl : BaseEntity
+    public class ProxyTestServer : BaseEntity
     {
         [Display(Name="Name")]
         public string Name { get; set; }

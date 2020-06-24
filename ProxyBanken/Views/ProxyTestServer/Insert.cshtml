@@ -1,9 +1,9 @@
-﻿@model ProxyBanken.DataAccess.Entity.ProxyTestUrl
+﻿@model ProxyBanken.DataAccess.Entity.ProxyTestServer
 @{
     Layout = null;
 }
 
-<form method="post" action="/proxytestserver/insert">
+<form method="post" action="api/proxytestserverapi/insert">
     @Html.HiddenFor(x => x.Id)
     <div class="form-group">
         <label for="UpdateInterval" class="col-form-label"> @Html.DisplayNameFor(x => x.Name)</label>
@@ -16,3 +16,4 @@
     </div>
 </form>
 
+<script src="~/js/proxy.test.server.insert.js"></script>

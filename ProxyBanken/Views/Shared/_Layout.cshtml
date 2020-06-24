@@ -26,13 +26,13 @@
                             <a class="nav-link active" id="Index" href="/">Home <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="ProxyProvider" href="/ProxyProvider">Providers</a>
+                            <a class="nav-link" id="proxyProvider" href="/ProxyProvider">Providers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="ProxyTestServer" href="/ProxyTestServer">Test Servers</a>
+                            <a class="nav-link" id="proxyTestServer" href="/ProxyTestServer">Test Servers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="Configuration" data-remote="/home/config" data-toggle="modal" data-target="#BaseModal">Configuration</a>
+                            <a class="nav-link" id="configuration" data-remote="/home/config" data-toggle="modal" data-target="#BaseModal">Configuration</a>
                         </li>
                     </ul>
                 </div>
@@ -55,7 +55,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div id="configBody" class="modal-body">
+                <div id="modalLoading">
+                    <div  class="spinner-grow text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+               
+                <div id="modalBody" class="modal-body hide">
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -83,7 +90,7 @@
     @RenderSection("Scripts", required: false)
 
     <script>
-        $("#@ViewContext.RouteData.Values["controller"]").addClass('active');       
+       // $("#@ViewContext.RouteData.Values["controller"]").addClass('active');       
     </script>
 
 </body>

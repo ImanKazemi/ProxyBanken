@@ -7,18 +7,18 @@ using System.Linq;
 
 namespace ProxyBanken.Repository.Implementation
 {
-    public class ProxyTestUrlRepository : Repository<ProxyTestUrl>, IProxyTestUrlRepository
+    public class ProxyTestServerRepository : Repository<ProxyTestServer>, IProxyTestServerRepository
     {
         private readonly ApplicationContext _context;
 
-        public ProxyTestUrlRepository(ApplicationContext context) : base(context)
+        public ProxyTestServerRepository(ApplicationContext context) : base(context)
         {
             _context = context;
         }
 
-        public FilteredDataModel<ProxyTestUrl> GetFiltered(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy)
+        public FilteredDataModel<ProxyTestServer> GetFiltered(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy)
         {
-            var query = _context.Set<ProxyTestUrl>().AsQueryable();
+            var query = _context.Set<ProxyTestServer>().AsQueryable();
 
             if (!string.IsNullOrEmpty(searchBy))
             {
@@ -30,7 +30,7 @@ namespace ProxyBanken.Repository.Implementation
             query = orderAscendingDirection ? query.OrderByDynamic(orderCriteria, DtOrderDir.Asc) : query.OrderByDynamic(orderCriteria, DtOrderDir.Desc);
 
             var result = query.Skip(start).Take(length).ToList();
-            return new FilteredDataModel<ProxyTestUrl>(result, query.Count(), Count());
+            return new FilteredDataModel<ProxyTestServer>(result, query.Count(), Count());
         }
 
 

@@ -3,9 +3,9 @@ using ProxyBanken.DataAccess.Entity;
 
 namespace ProxyBanken.DataAccess.Map
 {
-    public class ProxyTestUrlMap
+    public class ProxyTestServerMap
     {
-        public ProxyTestUrlMap(EntityTypeBuilder<ProxyTestUrl> entityBuilder)
+        public ProxyTestServerMap(EntityTypeBuilder<ProxyTestServer> entityBuilder)
         {
             entityBuilder.HasKey(p => p.Id);
         }

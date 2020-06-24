@@ -1,12 +1,15 @@
-﻿@model ProxyBanken.DataAccess.Entity.ProxyProvider
+﻿@model int
 @{
     Layout = null;
 }
 
-<form method="post" action="/proxyprovider/delete">
-    @Html.HiddenFor(x => x.Id)
+<form method="delete" action="api/proxyproviderapi/delete">
+    @Html.Hidden("id",Model)
 
     You have deleted this record.
     Do you want to save this change?
 </form>
 
+<script>
+    completeLoading();
+</script>

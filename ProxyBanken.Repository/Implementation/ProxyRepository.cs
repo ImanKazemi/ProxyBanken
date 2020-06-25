@@ -110,5 +110,23 @@ namespace ProxyBanken.Repository.Implementation
             }
             _context.SaveChanges();
         }
+
+        public List<Proxy> GetProxiesForExport(string orderCriteria, bool orderAscendingDirection, string searchBy)
+        {
+            var query = _context.Set<Proxy>().AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToUpper();
+                query = query.Where(x => (x.CreatedOn != null && x.CreatedOn.ToString().ToUpper().Contains(searchBy)) ||
+                (x.Ip != null && x.Ip.ToUpper().Contains(searchBy)) ||
+                x.Port.ToString().ToUpper().Contains(searchBy) ||
+                (x.ModifiedOn != null && x.ModifiedOn.ToString().ToUpper().Contains(searchBy)) ||
+                (x.LastFunctionalityTestDate != null && x.LastFunctionalityTestDate.ToString().ToUpper().Contains(searchBy)));
+            }
+            query = orderAscendingDirection ? query.OrderByDynamic(orderCriteria, DtOrderDir.Asc) : query.OrderByDynamic(orderCriteria, DtOrderDir.Desc);
+            var result = query.ToList();
+            return result;
+        }
     }
 }

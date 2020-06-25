@@ -22,7 +22,7 @@ namespace ProxyBanken.BackgroundService
         {
 
             _logger.LogInformation("Starting Proxy Delete Hosted service");
-            while (stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Proxy Delete Hosted service executing - {0}", DateTime.Now);
                 var proxyService = serviceProvider.GetRequiredService<IProxyService>();

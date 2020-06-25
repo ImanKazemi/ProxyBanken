@@ -11,5 +11,6 @@ namespace ProxyBanken.Repository.Interface
         FilteredDataModel<Proxy> GetPaged(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy);
         List<Proxy> GetExpiredProxies(int days);
         void BatchDelete(List<Proxy> deleteList);
+        List<Proxy> GetProxiesForExport(string orderCriteria, bool orderAscendingDirection, string searchBy);
     }
 }

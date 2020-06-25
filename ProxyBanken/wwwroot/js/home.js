@@ -23,7 +23,6 @@ $(document).ready(function () {
             contentType: "application/json",
             dataType: "json",
             data: function (d) {
-                d.columns[2].search.value = '192';
                 return JSON.stringify(d);
             }
         },
@@ -164,6 +163,10 @@ $(document).ready(function () {
 
         });
     })
+
+    $(document).on('click', "#saveProxies", function () {
+        window.open("/api/proxyapi/export?dtParametersString=" + table.ajax.params());
+    });
 
     $(document).on('click', "#updateProxies", function () {
         $('.alert').show()

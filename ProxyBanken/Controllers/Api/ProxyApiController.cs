@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Features;
+using Newtonsoft.Json;
 using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Helper;
 using ProxyBanken.Infrastructure.Model;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ProxyBanken.Controllers
@@ -52,6 +54,40 @@ namespace ProxyBanken.Controllers
                 recordsFiltered = result.FilteredCount,
                 data = result.Result
             });
+
+        }
+
+        [HttpGet("export")]
+        public IActionResult Export([FromQuery] DtParameters dtParameters)
+        {
+            var searchBy = dtParameters.Search?.Value;
+            string orderCriteria;
+            bool orderAscendingDirection;
+            if (dtParameters.Order != null)
+            {
+                orderCriteria = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+            else
+            {
+                orderCriteria = "lastFunctionalityTestDate";
+                orderAscendingDirection = true;
+            }
+            var result = _proxyService.GetProxiesForExport(orderCriteria, orderAscendingDirection, searchBy);
+
+            try
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var proxy in result)
+                {
+                    stringBuilder.AppendLine($"{proxy.Ip}:{ proxy.Port}");
+                }
+                return File(Encoding.UTF8.GetBytes(stringBuilder.ToString()), "text/csv", "proxies.csv");
+            }
+            catch
+            {
+                return Json(HttpStatusCode.ServiceUnavailable);
+            }
 
         }
 

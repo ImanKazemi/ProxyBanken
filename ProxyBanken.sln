@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxyBanken.DataAccess", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxyBanken.Repository", "ProxyBanken.Repository\ProxyBanken.Repository.csproj", "{3B1433AD-2C5E-461B-8278-AB4712616482}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyBanken.Infrastructure", "ProxyBanken.Infrastructure\ProxyBanken.Infrastructure.csproj", "{9B7B356F-7F0F-4008-8A1B-0BF11FBCA4A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxyBanken.Infrastructure", "ProxyBanken.Infrastructure\ProxyBanken.Infrastructure.csproj", "{9B7B356F-7F0F-4008-8A1B-0BF11FBCA4A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

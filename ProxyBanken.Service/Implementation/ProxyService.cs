@@ -55,5 +55,11 @@ namespace ProxyBanken.Service.Implementation
             _proxyRepository.Update(proxy);
             return _proxyRepository.SaveChanges();
         }
+
+        public List<Proxy> GetProxiesForExport(string orderCriteria, bool orderAscendingDirection, string searchBy)
+        {
+            return _proxyRepository.GetProxiesForExport(orderCriteria, orderAscendingDirection, searchBy);
+
+        }
     }
 }

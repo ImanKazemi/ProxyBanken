@@ -8,6 +8,7 @@ namespace ProxyBanken.Service.Interface
     {
         IEnumerable<Proxy> GetProxies();
         FilteredDataModel<Proxy> GetPagedProxies(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy);
+        List<Proxy> GetProxiesForExport(string orderCriteria, bool orderAscendingDirection, string searchBy);
         int Count();
         Proxy GetProxy(int id);
         void BatchCreateOrUpdate(IList<Proxy> proxies);

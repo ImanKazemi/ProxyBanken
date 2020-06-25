@@ -29,7 +29,7 @@ namespace ProxyBanken.Helper
             List<Proxy> proxies = proxyList.Select(proxyItem => new Proxy
             {
                 Ip = GetIp(proxyItem.SelectSingleNode($".{provider.IpQuery}").InnerText), // get ip from table list
-                Port = int.Parse(proxyItem.SelectSingleNode($".{provider.PortQuery}").InnerText.Trim()) // get port from table list
+                Port = GetPort(proxyItem.SelectSingleNode($".{provider.PortQuery}").InnerText.Trim()) // get port from table list
             }).ToList();
 
             Parallel.ForEach(proxies, proxy =>
@@ -40,7 +40,7 @@ namespace ProxyBanken.Helper
                     proxy.LastFunctionalityTestDate = pingDate.Value;
                 }
 
-                proxy.Anonymity = checkAnonymity(proxy.Ip, proxy.Port);
+                proxy.Anonymity = CheckAnonymity(proxy.Ip, proxy.Port);
 
             });
 
@@ -116,13 +116,35 @@ namespace ProxyBanken.Helper
 
         }
 
+        private static int GetPort(string portString)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(portString))
+                {
+                    return 80;
+                }
+                else if (portString.Contains(":"))
+                {
+                    return int.Parse(portString.Split(":")[0]);
+                }
+
+                return int.Parse(portString);
+            }
+            catch (Exception)
+            {
+                return 80;
+            }
+
+        }
+
         public static IList<ProxyTest> TestProxies(IList<Proxy> proxyList, IEnumerable<ProxyTestServer> getTestUrls)
         {
             var proxyTestList = new List<ProxyTest>();
 
             Parallel.ForEach(proxyList, proxy =>
             {
-                Parallel.ForEach(getTestUrls, testUrl =>
+                foreach (var testUrl in getTestUrls.AsParallel())
                 {
                     var testDateTime = CheckConnectivity(proxy.Ip, proxy.Port, testUrl.Url);
                     proxyTestList.Add(new ProxyTest
@@ -131,19 +153,28 @@ namespace ProxyBanken.Helper
                         ProxyId = proxy.Id,
                         LastSuccessDate = testDateTime
                     });
-                });
+                }
             });
 
             return proxyTestList;
         }
 
-        public static ProxyAnonymity checkAnonymity(string ip, int port)
+        /// <summary>
+        /// this function is used for checking request headers with proxy
+        /// to check proxy anonymity level
+        /// here we used a website to return header as a json but we could use another way and 
+        /// read request the headers directly
+        /// </summary>
+        /// <param name="ip">Proxy Ip</param>
+        /// <param name="port">Proxy Header</param>
+        /// <returns>Proxy Anonymity Level</returns>
+        public static ProxyAnonymity CheckAnonymity(string ip, int port)
         {
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://headers.jsontest.com/");
                 request.Method = "GET";
-                request.Timeout = 4000;
+                request.Timeout = 10000;
                 request.ContentType = "application/json; charset=utf-8";
                 WebProxy proxy = new WebProxy(ip, port);
                 request.Proxy = proxy;
@@ -157,32 +188,34 @@ namespace ProxyBanken.Helper
                     }
 
                     var jResultObject = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-
-                    if (jResultObject.ContainsKey("Authorization") ||
-                        jResultObject.ContainsKey("From") ||
-                        jResultObject.ContainsKey("Proxy-Authorization") ||
-                        jResultObject.ContainsKey("Proxy-Connection") ||
-                        jResultObject.ContainsKey("Via") ||
-                        jResultObject.ContainsKey("X-Forwarded-For")
-                        )
+                    if (jResultObject != null)
                     {
-                        if (!jResultObject.ContainsKey("X-Forwarded-For"))
+                        if (jResultObject.ContainsKey("Authorization") ||
+                                jResultObject.ContainsKey("From") ||
+                                jResultObject.ContainsKey("Proxy-Authorization") ||
+                                jResultObject.ContainsKey("Proxy-Connection") ||
+                                jResultObject.ContainsKey("Via") ||
+                                jResultObject.ContainsKey("X-Forwarded-For"))
                         {
-                            return ProxyAnonymity.Anonymous;
+                            if (!jResultObject.ContainsKey("X-Forwarded-For"))
+                            {
+                                return ProxyAnonymity.Anonymous;
+                            }
+                            else
+                            {
+                                return ProxyAnonymity.Transparent;
+                            }
                         }
                         else
                         {
-                            return ProxyAnonymity.Transparent;
+                            return ProxyAnonymity.Elite;
                         }
                     }
-                    else
-                    {
-                        return ProxyAnonymity.Elite;
-                    }
+
 
                 }
             }
-            catch
+            catch (Exception ex)
             {
 
             }
@@ -192,5 +225,25 @@ namespace ProxyBanken.Helper
             return ProxyAnonymity.Unknown;
 
         }
+
+
+        public static IList<ProxyTest> TestProxy(Proxy proxy, IEnumerable<ProxyTestServer> getTestUrls)
+        {
+            var proxyTestList = new List<ProxyTest>();
+
+            foreach (var testUrl in getTestUrls.AsParallel())
+            {
+                var testDateTime = CheckConnectivity(proxy.Ip, proxy.Port, testUrl.Url);
+                proxyTestList.Add(new ProxyTest
+                {
+                    ProxyTestServerId = testUrl.Id,
+                    ProxyId = proxy.Id,
+                    LastSuccessDate = testDateTime
+                });
+            }
+
+            return proxyTestList;
+        }
+
     }
 }

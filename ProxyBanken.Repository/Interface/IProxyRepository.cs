@@ -9,6 +9,7 @@ namespace ProxyBanken.Repository.Interface
         Proxy GetProxyByIpPort(string ip, int port);
         void BatchUpdate(IList<Proxy> proxies);
         FilteredDataModel<Proxy> GetPaged(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy);
-        void DeleteObsoleteProxy(int days);
+        List<Proxy> GetExpiredProxies(int days);
+        void BatchDelete(List<Proxy> deleteList);
     }
 }

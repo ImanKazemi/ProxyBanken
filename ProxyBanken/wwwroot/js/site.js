@@ -14,7 +14,7 @@ $("#modalSave").on('click', function () {
         data: form.serialize(),
         type: $(form).attr('method'),
         success: function (data) {
-            var table = $('.table').DataTable();
+            var table = $('.data-table').DataTable();
             if (table) {
                 table.ajax.reload();
             }

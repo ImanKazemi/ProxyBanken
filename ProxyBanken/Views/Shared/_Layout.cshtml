@@ -26,13 +26,13 @@
                             <a class="nav-link active" id="Index" href="/">Home <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="proxyProvider" href="/ProxyProvider">Providers</a>
+                            <a class="nav-link" id="ProxyProvider" href="/ProxyProvider">Providers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="proxyTestServer" href="/ProxyTestServer">Test Servers</a>
+                            <a class="nav-link" id="ProxyTestServer" href="/ProxyTestServer">Test Servers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="configuration" data-remote="/home/config" data-toggle="modal" data-target="#BaseModal">Configuration</a>
+                            <a class="nav-link" id="Configuration" data-remote="/home/config" data-toggle="modal" data-target="#BaseModal">Configuration</a>
                         </li>
                     </ul>
                 </div>
@@ -75,8 +75,9 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - ProxyBanken -
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2020 - ProxyBanken 
+            @*-
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -90,7 +91,7 @@
     @RenderSection("Scripts", required: false)
 
     <script>
-       // $("#@ViewContext.RouteData.Values["controller"]").addClass('active');       
+        $("#@ViewContext.RouteData.Values["controller"]").addClass('active');       
     </script>
 
 </body>

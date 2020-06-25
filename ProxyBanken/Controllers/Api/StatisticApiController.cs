@@ -26,7 +26,7 @@ namespace ProxyBanken.Controllers.Api
             {
                 ProviderCount = _proxyProviderService.Count(),
                 ProxyCount = _proxyService.Count(),
-                TestServiceCount = _ProxyTestServerService.Count()
+                TestServerCount = _ProxyTestServerService.Count()
             };
             return Json(values);
         }

@@ -11,8 +11,8 @@ namespace ProxyBanken.Service.Interface
         int Count();
         Proxy GetProxy(int id);
         void BatchCreateOrUpdate(IList<Proxy> proxies);
-
-        void DeleteObsoleteProxy(int days);
-
+        List<Proxy> GetExpiredProxies(int days);
+        void BatchDelete(List<Proxy> deleteList);
+        int Update(Proxy proxy);
     }
 }

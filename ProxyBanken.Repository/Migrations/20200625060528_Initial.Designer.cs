@@ -10,8 +10,8 @@ using ProxyBanken.Repository;
 namespace ProxyBanken.Repository.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200617174441_Init")]
-    partial class Init
+    [Migration("20200625060528_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -144,6 +144,30 @@ namespace ProxyBanken.Repository.Migrations
                             PortQuery = "//td[2]",
                             RowQuery = "//table/tbody/tr[@data-proxy-id]",
                             Url = "https://www.proxynova.com/proxy-server-list/"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IpQuery = "//td[1]",
+                            PortQuery = "//td[2]",
+                            RowQuery = "//table/tbody/tr",
+                            Url = "http://cn-proxy.com/archives/218"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IpQuery = "//td[1]",
+                            PortQuery = "//td[2]",
+                            RowQuery = "//table/tbody/tr",
+                            Url = "https://www.socks-proxy.net/"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IpQuery = "//td[1]",
+                            PortQuery = "//td[3]",
+                            RowQuery = "(//div[contains(@class, 'table-responsive')])[2]/table/tbody/tr",
+                            Url = "https://free-proxy-list.com"
                         });
                 });
 

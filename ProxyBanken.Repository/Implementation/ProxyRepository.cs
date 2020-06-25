@@ -39,7 +39,11 @@ namespace ProxyBanken.Repository.Implementation
                     if (existedProxy != null)
                     {
                         existedProxy.ModifiedOn = DateTime.Now;
+                        existedProxy.LastFunctionalityTestDate = proxy.LastFunctionalityTestDate;
+                        existedProxy.BaseUrl = proxy.BaseUrl;
+                        existedProxy.Anonymity = proxy.Anonymity;
                         _context.Entry(existedProxy).State = EntityState.Modified;
+                        proxy.Id = existedProxy.Id;
                     }
                     else
                     {
@@ -63,6 +67,8 @@ namespace ProxyBanken.Repository.Implementation
                 //log exception
                 throw;
             }
+
+
         }
 
         public FilteredDataModel<Proxy> GetPaged(int start, int length, string orderCriteria, bool orderAscendingDirection, string searchBy)
@@ -87,19 +93,22 @@ namespace ProxyBanken.Repository.Implementation
         }
 
 
-        public void DeleteObsoleteProxy(int days)
+        public List<Proxy> GetExpiredProxies(int days)
         {
             var dateOfDeletation = DateTime.Now.AddDays(days * -1);
-            var proxies = _context.Set<Proxy>().Where(x => x.LastFunctionalityTestDate <= dateOfDeletation || (x.LastFunctionalityTestDate == null && x.ModifiedOn <= dateOfDeletation)).ToList();
+            var proxies = _context.Set<Proxy>().Where(x => (x.LastFunctionalityTestDate <= dateOfDeletation || x.LastFunctionalityTestDate == null) && x.ModifiedOn <= dateOfDeletation).ToList();
 
-            foreach (var proxy in proxies)
+            return proxies;
+
+        }
+
+        public void BatchDelete(List<Proxy> deleteList)
+        {
+            foreach (var proxy in deleteList)
             {
                 _context.Remove(proxy);
             }
-
             _context.SaveChanges();
         }
-
-
     }
 }

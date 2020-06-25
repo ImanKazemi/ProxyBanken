@@ -67,7 +67,7 @@ $(document).ready(function () {
                 data: "lastFunctionalityTestDate",
                 render: function (data, type, row) {
                     if (data == null) {
-                        return "";
+                        return "not working at the moment";
                     }
 
                     var lastDate = moment(data);
@@ -81,7 +81,13 @@ $(document).ready(function () {
 
                     return data;
                 }
-            }
+            },
+            {
+                data: "id",
+                render: function (data, type, row) {
+                    return '<div id="refreshProxy" data-id=' + data + '><i class="material-icons refreshProxy">refresh</i></div>';
+                }
+            },
         ],
     });
 
@@ -102,10 +108,23 @@ $(document).ready(function () {
     });
 
     function format(d) {
-        console.log(d.id);
-        //return "";
-        $.get("/Home/ProxyTest?proxyId=" + d.id, function (data) {
-            html = data;
+        var html = "<div id='test_" + d.id + "'>s</div>"
+        $.get("/api/ProxyTestApi?proxyId=" + d.id, function (data) {
+            var table = '<table class="table"><thead><tr><th>Server Name</th><th>Last Successful Test Date</th></tr></thead><tbody>';
+            for (var i = 0; i < data.length; i++) {
+                table += '<tr><td>' + data[i].proxyTestServer.name + '</td><td>';
+                if (data[i].lastSuccessDate) {
+                    table += moment(data[i].lastSuccessDate).format("ddd DD/MM/YYYY HH:mm:ss");
+
+                } else {
+                    table += '<i class="material-icons" style="color:red">wifi_off</i>';
+                }
+                table += '</td></tr>';
+            }
+            table += "</tbody></table>";
+
+            $("#test_" + d.id).html(table);
+
         });
         return html;
     }
@@ -115,4 +134,21 @@ $(document).ready(function () {
         $("#providerCount").text(data.providerCount);
         $("#testServerCount").text(data.testServerCount);
     });
+
+    $(document).on('click', '#refreshProxy', function () {
+        $(this).html('<span class="spinner-grow spinner-grow-sm text-info" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>');
+        var table = $('.data-table').DataTable();
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+        if (row.child.isShown()) {
+            row.child.hide();
+            $(tr).find('td.details-control').html('<span class="material-icons">keyboard_arrow_right</span >');
+        }
+
+        $.get("/api/proxytestapi/proxytest?id=" + $(this).data('id'), function () {
+            table.ajax.reload();
+            $(this).html('<i class="material-icons refreshProxy">refresh</i>');
+
+        });
+    })
 });

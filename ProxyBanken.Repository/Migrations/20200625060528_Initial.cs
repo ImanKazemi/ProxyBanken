@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProxyBanken.Repository.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,7 +41,7 @@ namespace ProxyBanken.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProxyTestUrl",
+                name: "ProxyTestServer",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -51,7 +51,7 @@ namespace ProxyBanken.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProxyTestUrl", x => x.Id);
+                    table.PrimaryKey("PK_ProxyTestServer", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,7 +86,7 @@ namespace ProxyBanken.Repository.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LastSuccessDate = table.Column<DateTime>(nullable: true),
-                    ProxyTestUrlId = table.Column<int>(nullable: false),
+                    ProxyTestServerId = table.Column<int>(nullable: false),
                     ProxyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -99,9 +99,9 @@ namespace ProxyBanken.Repository.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProxyTest_ProxyTestUrl_ProxyTestUrlId",
-                        column: x => x.ProxyTestUrlId,
-                        principalTable: "ProxyTestUrl",
+                        name: "FK_ProxyTest_ProxyTestServer_ProxyTestServerId",
+                        column: x => x.ProxyTestServerId,
+                        principalTable: "ProxyTestServer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -121,7 +121,10 @@ namespace ProxyBanken.Repository.Migrations
                 values: new object[,]
                 {
                     { 1, null, "//td[1]", null, null, "//td[2]", "//table[@id='proxylisttable']/tbody/tr", "https://free-proxy-list.net/" },
-                    { 2, null, "//td[1]/abbr/script", null, null, "//td[2]", "//table/tbody/tr[@data-proxy-id]", "https://www.proxynova.com/proxy-server-list/" }
+                    { 2, null, "//td[1]/abbr/script", null, null, "//td[2]", "//table/tbody/tr[@data-proxy-id]", "https://www.proxynova.com/proxy-server-list/" },
+                    { 3, null, "//td[1]", null, null, "//td[2]", "//table/tbody/tr", "http://cn-proxy.com/archives/218" },
+                    { 4, null, "//td[1]", null, null, "//td[2]", "//table/tbody/tr", "https://www.socks-proxy.net/" },
+                    { 5, null, "//td[1]", null, null, "//td[3]", "(//div[contains(@class, 'table-responsive')])[2]/table/tbody/tr", "https://free-proxy-list.com" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -149,9 +152,9 @@ namespace ProxyBanken.Repository.Migrations
                 column: "ProxyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProxyTest_ProxyTestUrlId",
+                name: "IX_ProxyTest_ProxyTestServerId",
                 table: "ProxyTest",
-                column: "ProxyTestUrlId");
+                column: "ProxyTestServerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -166,7 +169,7 @@ namespace ProxyBanken.Repository.Migrations
                 name: "Proxy");
 
             migrationBuilder.DropTable(
-                name: "ProxyTestUrl");
+                name: "ProxyTestServer");
 
             migrationBuilder.DropTable(
                 name: "ProxyProvider");

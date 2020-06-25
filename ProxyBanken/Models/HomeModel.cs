@@ -4,6 +4,6 @@
     {
         public int ProxyCount { get; set; }
         public int ProviderCount { get; set; }
-        public int TestServiceCount { get; set; }
+        public int TestServerCount { get; set; }
     }
 }

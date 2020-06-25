@@ -40,9 +40,20 @@ namespace ProxyBanken.Service.Implementation
 
         }
 
-        public void DeleteObsoleteProxy(int days)
+        public List<Proxy> GetExpiredProxies(int days)
         {
-            _proxyRepository.DeleteObsoleteProxy(days);
+           return  _proxyRepository.GetExpiredProxies(days);
+        }
+
+        public void BatchDelete(List<Proxy> deleteList)
+        {
+            _proxyRepository.BatchDelete(deleteList);
+        }
+
+        public int Update(Proxy proxy)
+        {
+            _proxyRepository.Update(proxy);
+            return _proxyRepository.SaveChanges();
         }
     }
 }

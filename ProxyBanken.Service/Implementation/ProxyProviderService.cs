@@ -14,7 +14,7 @@ namespace ProxyBanken.Service.Implementation
             _repository = repository;
         }
 
-        public IEnumerable<ProxyProvider> GetBaseProxies()
+        public IEnumerable<ProxyProvider> GetProxyProviders()
         {
             return _repository.GetAll();
         }

@@ -2,6 +2,7 @@
 using ProxyBanken.Helper;
 using ProxyBanken.Infrastructure.Enum;
 using ProxyBanken.Service.Interface;
+using System;
 using System.Linq;
 using System.Net;
 
@@ -30,23 +31,37 @@ namespace ProxyBanken.Controllers.Api
         [HttpGet("ProxyTest")]
         public HttpStatusCode TestProxy(int id)
         {
-            var proxy = _proxyService.GetProxy(id);
-            var testServers = _proxyTestServerService.GetTestProxies().ToList();
-
-            proxy.LastFunctionalityTestDate = ProxyHelper.Ping(proxy.Ip);
-            var anonymity = ProxyHelper.CheckAnonymity(proxy.Ip, proxy.Port);
-
-            if (anonymity != ProxyAnonymity.Unknown)
+            try
             {
-                proxy.Anonymity = anonymity;
+                var proxy = _proxyService.GetProxy(id);
+                var testServers = _proxyTestServerService.GetTestProxies().ToList();
+
+                var pingDate = ProxyHelper.Ping(proxy.Ip);
+
+                if (pingDate.HasValue)
+                {
+                    proxy.LastFunctionalityTestDate = pingDate.Value;
+                }
+
+                var anonymity = ProxyHelper.CheckAnonymity(proxy.Ip, proxy.Port);
+
+                if (anonymity != ProxyAnonymity.Unknown)
+                {
+                    proxy.Anonymity = anonymity;
+                }
+
+                var proxyTests = ProxyHelper.TestProxy(proxy, testServers);
+
+                _proxyTestService.BatchCreateOrUpdate(proxyTests);
+                _proxyService.Update(proxy);
+
+                return HttpStatusCode.OK;
+            }
+            catch
+            {
+                return HttpStatusCode.InternalServerError;
             }
 
-            var proxyTests = ProxyHelper.TestProxy(proxy, testServers);
-
-            _proxyTestService.BatchCreateOrUpdate(proxyTests);
-            _proxyService.Update(proxy);
-
-            return HttpStatusCode.OK;
         }
     }
 }

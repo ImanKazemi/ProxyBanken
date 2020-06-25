@@ -23,6 +23,7 @@ $(document).ready(function () {
             contentType: "application/json",
             dataType: "json",
             data: function (d) {
+                d.columns[2].search.value = '192';
                 return JSON.stringify(d);
             }
         },
@@ -67,7 +68,7 @@ $(document).ready(function () {
                 data: "lastFunctionalityTestDate",
                 render: function (data, type, row) {
                     if (data == null) {
-                        return "not working at the moment";
+                        return '<span class="material-icons text-danger">highlight_off</span >';
                     }
 
                     var lastDate = moment(data);
@@ -110,16 +111,28 @@ $(document).ready(function () {
     function format(d) {
         var html = "<div id='test_" + d.id + "'>s</div>"
         $.get("/api/ProxyTestApi?proxyId=" + d.id, function (data) {
-            var table = '<table class="table"><thead><tr><th>Server Name</th><th>Last Successful Test Date</th></tr></thead><tbody>';
+            var table = '<table class="table"><thead><tr><th>Server Name</th><th>Success Date</th><th>Status</th><th>Response Time(ms)</th></tr></thead><tbody>';
             for (var i = 0; i < data.length; i++) {
                 table += '<tr><td>' + data[i].proxyTestServer.name + '</td><td>';
                 if (data[i].lastSuccessDate) {
                     table += moment(data[i].lastSuccessDate).format("ddd DD/MM/YYYY HH:mm:ss");
-
                 } else {
                     table += '<i class="material-icons" style="color:red">wifi_off</i>';
                 }
-                table += '</td></tr>';
+                table += '</td>';
+                if (data[i].statusCode) {
+                    table += '<td>' + data[i].statusCode + '</td>';
+                } else {
+                    table += '<td></td>';
+                }
+                table += '<td>';
+                if (data[i].responseTime) {
+                    table += data[i].responseTime;
+                } else {
+                    table += '<i class="material-icons" style="color:red">wifi_off</i>';
+                }
+                table += '</td>';
+                table += '</tr>';
             }
             table += "</tbody></table>";
 
@@ -151,4 +164,18 @@ $(document).ready(function () {
 
         });
     })
+
+    $(document).on('click', "#updateProxies", function () {
+        $('.alert').show()
+        var table = $('.data-table').DataTable();
+        $.get("/api/proxyapi/update", function () {
+            table.ajax.reload();
+            $('.alert').hide()
+            $.ajax("/api/statisticapi").done(function (data) {
+                $("#proxyCount").text(data.proxyCount);
+                $("#providerCount").text(data.providerCount);
+                $("#testServerCount").text(data.testServerCount);
+            });
+        });
+    });
 });

@@ -29,9 +29,11 @@ namespace ProxyBanken.BackgroundService
             {
                 _logger.LogInformation("Hosted service executing - {0}", DateTime.Now);
                 var proxyProviderService = serviceProvider.GetRequiredService<IProxyProviderService>();
-                var serviceProviders = proxyProviderService.GetBaseProxies();
+                var serviceProviders = proxyProviderService.GetProxyProviders();
 
                 var configService = serviceProvider.GetRequiredService<IConfigService>();
+                var ProxyTestServerService = serviceProvider.GetRequiredService<IProxyTestServerService>();
+                var testServers = ProxyTestServerService.GetTestProxies();
 
                 Parallel.ForEach(serviceProviders, provider =>
                 {
@@ -47,8 +49,8 @@ namespace ProxyBanken.BackgroundService
                         {
                             proxyService.BatchCreateOrUpdate(proxyList);
 
-                            var ProxyTestServerService = serviceProvider.GetRequiredService<IProxyTestServerService>();
-                            IList<ProxyTest> proxyTestResults = ProxyHelper.TestProxies(proxyList.ToList(), ProxyTestServerService.GetTestProxies());
+
+                            IList<ProxyTest> proxyTestResults = ProxyHelper.TestProxies(proxyList.ToList(), testServers);
 
                             if (proxyTestResults.Count > 0)
                             {

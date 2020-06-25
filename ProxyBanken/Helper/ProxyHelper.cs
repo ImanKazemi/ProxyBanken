@@ -5,6 +5,7 @@ using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Infrastructure.Enum;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -73,33 +74,51 @@ namespace ProxyBanken.Helper
             return context.Connection.RemoteIpAddress.ToString();
         }
 
-        public static DateTime? CheckConnectivity(string ip, int port, string testAddress)
+        public static ProxyTest GetConnectivityInfo(Proxy proxy, ProxyTestServer proxyTestServers)
         {
+            var proxyTest = new ProxyTest();
+            proxyTest.ProxyTestServerId = proxyTestServers.Id;
+            proxyTest.ProxyId = proxy.Id;
+
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(testAddress);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(proxyTestServers.Url);
                 request.Method = "GET";
-                request.Timeout = 4000;
-                WebProxy proxy = new WebProxy(ip, port)
+                request.Timeout = 10000;
+                WebProxy webProxy = new WebProxy(proxy.Ip, proxy.Port)
                 {
                     BypassProxyOnLocal = false
                 };
+                request.Proxy = webProxy;
 
-                request.Proxy = proxy;
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                timer.Stop();
+
+
+                proxyTest.StatusCode = response.StatusCode;
+
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    return DateTime.Now;
+                    proxyTest.LastSuccessDate = DateTime.Now;
+                    proxyTest.ResponseTime = timer.Elapsed.Milliseconds;
                 }
+                else
+                {
+                    proxyTest.LastSuccessDate = null;
+                    proxyTest.ResponseTime = null;
+                }
+
             }
             catch (Exception exception)
             {
+                proxyTest.LastSuccessDate = null;
+                proxyTest.ResponseTime = null;
+                proxyTest.StatusCode = HttpStatusCode.RequestTimeout;
                 // ignored
             }
-
-            return null;
-
-
+            return proxyTest;
         }
         private static string GetIp(string ipString)
         {
@@ -146,15 +165,22 @@ namespace ProxyBanken.Helper
             {
                 foreach (var testUrl in getTestUrls.AsParallel())
                 {
-                    var testDateTime = CheckConnectivity(proxy.Ip, proxy.Port, testUrl.Url);
-                    proxyTestList.Add(new ProxyTest
-                    {
-                        ProxyTestServerId = testUrl.Id,
-                        ProxyId = proxy.Id,
-                        LastSuccessDate = testDateTime
-                    });
+                    proxyTestList.Add(GetConnectivityInfo(proxy, testUrl));
                 }
             });
+
+            return proxyTestList;
+        }
+
+        public static IList<ProxyTest> TestProxy(Proxy proxy, IEnumerable<ProxyTestServer> getTestUrls)
+        {
+            var proxyTestList = new List<ProxyTest>();
+
+            foreach (var testUrl in getTestUrls.AsParallel())
+            {
+                var proxyTest = GetConnectivityInfo(proxy, testUrl);
+                proxyTestList.Add(proxyTest);
+            }
 
             return proxyTestList;
         }
@@ -227,23 +253,7 @@ namespace ProxyBanken.Helper
         }
 
 
-        public static IList<ProxyTest> TestProxy(Proxy proxy, IEnumerable<ProxyTestServer> getTestUrls)
-        {
-            var proxyTestList = new List<ProxyTest>();
 
-            foreach (var testUrl in getTestUrls.AsParallel())
-            {
-                var testDateTime = CheckConnectivity(proxy.Ip, proxy.Port, testUrl.Url);
-                proxyTestList.Add(new ProxyTest
-                {
-                    ProxyTestServerId = testUrl.Id,
-                    ProxyId = proxy.Id,
-                    LastSuccessDate = testDateTime
-                });
-            }
-
-            return proxyTestList;
-        }
 
     }
 }

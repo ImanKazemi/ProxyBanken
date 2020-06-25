@@ -34,9 +34,11 @@ namespace ProxyBanken.Repository.Implementation
                         _context.Add(proxyTest);
 
                     }
-                    else if (proxyTest.LastSuccessDate.HasValue)
+                    else
                     {
                         lastTest.LastSuccessDate = proxyTest.LastSuccessDate;
+                        lastTest.StatusCode = proxyTest.StatusCode;
+                        lastTest.ResponseTime = proxyTest.ResponseTime;
                         _context.Entry(lastTest).State = EntityState.Modified;
 
                     }

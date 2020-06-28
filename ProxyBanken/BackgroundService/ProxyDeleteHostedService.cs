@@ -21,6 +21,8 @@ namespace ProxyBanken.BackgroundService
         public override async Task ExecuteInScope(IServiceProvider serviceProvider, CancellationToken stoppingToken)
         {
 
+            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken); // a wait to run website seperately
+
             _logger.LogInformation("Starting Proxy Delete Hosted service");
             while (!stoppingToken.IsCancellationRequested)
             {

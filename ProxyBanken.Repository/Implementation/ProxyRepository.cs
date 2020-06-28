@@ -33,29 +33,23 @@ namespace ProxyBanken.Repository.Implementation
 
             foreach (var proxy in proxies)
             {
-                try
+                var existedProxy = GetProxyByIpPort(proxy.Ip, proxy.Port);
+                if (existedProxy != null)
                 {
-                    var existedProxy = GetProxyByIpPort(proxy.Ip, proxy.Port);
-                    if (existedProxy != null)
-                    {
-                        existedProxy.ModifiedOn = DateTime.Now;
-                        existedProxy.LastFunctionalityTestDate = proxy.LastFunctionalityTestDate;
-                        existedProxy.BaseUrl = proxy.BaseUrl;
-                        existedProxy.Anonymity = proxy.Anonymity;
-                        _context.Entry(existedProxy).State = EntityState.Modified;
-                        proxy.Id = existedProxy.Id;
-                    }
-                    else
-                    {
-                        proxy.ModifiedOn = proxy.CreatedOn = DateTime.Now;
-                        _context.Add(proxy);
-                    }
+                    existedProxy.ModifiedOn = DateTime.Now;
+                    existedProxy.LastFunctionalityTestDate = proxy.LastFunctionalityTestDate;
+                    existedProxy.Provider = proxy.Provider;
+                    existedProxy.Anonymity = proxy.Anonymity;
+                    _context.Entry(existedProxy).State = EntityState.Modified;
+                    proxy.Id = existedProxy.Id;
                 }
-                catch (Exception exception)
+                else
                 {
-                    //log exception
-                }
+                    proxy.ModifiedOn = proxy.CreatedOn = DateTime.Now;
 
+                    _context.Add(proxy);
+                    _context.Entry(proxy.Provider).State = EntityState.Detached;
+                }
             }
 
             try
@@ -64,7 +58,7 @@ namespace ProxyBanken.Repository.Implementation
             }
             catch (Exception ex)
             {
-                //log exception
+                //throw exception to save in database
                 throw;
             }
 

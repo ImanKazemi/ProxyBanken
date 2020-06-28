@@ -13,12 +13,12 @@ namespace ProxyBanken.BackgroundService
 {
     public class ProxyUpdateHostedService : ScopedBackgroundService
     {
+
         private readonly ILogger<ProxyUpdateHostedService> _logger;
         public ProxyUpdateHostedService(IServiceScopeFactory serviceScopeFactory, ILogger<ProxyUpdateHostedService> logger) : base(serviceScopeFactory)
         {
             _logger = logger;
         }
-
         public override async Task ExecuteInScope(IServiceProvider serviceProvider, CancellationToken stoppingToken)
         {
 
@@ -26,6 +26,8 @@ namespace ProxyBanken.BackgroundService
 
             while (!stoppingToken.IsCancellationRequested)
             {
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken); // a wait to run website seperately
+
                 _logger.LogInformation("Hosted service executing - {0}", DateTime.Now);
                 var proxyProviderService = serviceProvider.GetRequiredService<IProxyProviderService>();
                 var serviceProviders = proxyProviderService.GetProxyProviders();
@@ -47,16 +49,12 @@ namespace ProxyBanken.BackgroundService
                         if (proxyList.Count > 0)
                         {
                             proxyService.BatchCreateOrUpdate(proxyList);
-
-
                             IList<ProxyTest> proxyTestResults = ProxyHelper.TestProxies(proxyList.ToList(), testServers);
-
                             if (proxyTestResults.Count > 0)
                             {
                                 var proxyTestService = serviceProvider.GetRequiredService<IProxyTestService>();
                                 proxyTestService.BatchCreateOrUpdate(proxyTestResults);
                             }
-
                         }
                     }
                     catch (Exception ex)

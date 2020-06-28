@@ -14,7 +14,7 @@ namespace ProxyBanken.Repository.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Key = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true)
+                    Value = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,12 +27,12 @@ namespace ProxyBanken.Repository.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Url = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(maxLength: 50, nullable: false),
                     LastFetchOn = table.Column<DateTime>(nullable: true),
                     LastFetchProxyCount = table.Column<int>(nullable: true),
-                    RowQuery = table.Column<string>(nullable: true),
-                    IpQuery = table.Column<string>(nullable: true),
-                    PortQuery = table.Column<string>(nullable: true),
+                    RowQuery = table.Column<string>(maxLength: 4000, nullable: true),
+                    IpQuery = table.Column<string>(maxLength: 4000, nullable: true),
+                    PortQuery = table.Column<string>(maxLength: 4000, nullable: true),
                     Exception = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -46,8 +46,8 @@ namespace ProxyBanken.Repository.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Url = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Url = table.Column<string>(maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,20 +60,20 @@ namespace ProxyBanken.Repository.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Ip = table.Column<string>(nullable: true),
+                    Ip = table.Column<string>(maxLength: 15, nullable: true),
                     Port = table.Column<int>(nullable: false),
                     Anonymity = table.Column<int>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     LastFunctionalityTestDate = table.Column<DateTime>(nullable: true),
-                    BaseUrlId = table.Column<int>(nullable: true)
+                    ProviderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Proxy", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Proxy_ProxyProvider_BaseUrlId",
-                        column: x => x.BaseUrlId,
+                        name: "FK_Proxy_ProxyProvider_ProviderId",
+                        column: x => x.ProviderId,
                         principalTable: "ProxyProvider",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -87,7 +87,9 @@ namespace ProxyBanken.Repository.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LastSuccessDate = table.Column<DateTime>(nullable: true),
                     ProxyTestServerId = table.Column<int>(nullable: false),
-                    ProxyId = table.Column<int>(nullable: false)
+                    ProxyId = table.Column<int>(nullable: false),
+                    ResponseTime = table.Column<double>(nullable: true),
+                    StatusCode = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -127,6 +129,16 @@ namespace ProxyBanken.Repository.Migrations
                     { 5, null, "//td[1]", null, null, "//td[3]", "(//div[contains(@class, 'table-responsive')])[2]/table/tbody/tr", "https://free-proxy-list.com" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "ProxyTestServer",
+                columns: new[] { "Id", "Name", "Url" },
+                values: new object[,]
+                {
+                    { 1, "Google", "https://google.com" },
+                    { 2, "Bing", "https://www.bing.com" },
+                    { 3, "Duck Duck Go", "https://duckduckgo.com/" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Config_Key",
                 table: "Config",
@@ -135,9 +147,9 @@ namespace ProxyBanken.Repository.Migrations
                 filter: "[Key] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Proxy_BaseUrlId",
+                name: "IX_Proxy_ProviderId",
                 table: "Proxy",
-                column: "BaseUrlId");
+                column: "ProviderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Proxy_Ip_Port",

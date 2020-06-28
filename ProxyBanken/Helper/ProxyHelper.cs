@@ -29,8 +29,9 @@ namespace ProxyBanken.Helper
 
             List<Proxy> proxies = proxyList.Select(proxyItem => new Proxy
             {
-                Ip = GetIp(proxyItem.SelectSingleNode($".{provider.IpQuery}").InnerText), // get ip from table list
-                Port = GetPort(proxyItem.SelectSingleNode($".{provider.PortQuery}").InnerText.Trim()) // get port from table list
+                Ip = GetIp(proxyItem.SelectSingleNode($".{provider.IpQuery}").InnerText), // get ip from table/list
+                Port = GetPort(proxyItem.SelectSingleNode($".{provider.PortQuery}").InnerText.Trim()), // get port from table/list
+                Provider = provider
             }).ToList();
 
             Parallel.ForEach(proxies, proxy =>
@@ -47,79 +48,6 @@ namespace ProxyBanken.Helper
 
             return proxies;
         }
-
-        public static DateTime? Ping(string address)
-        {
-            Ping ping = new Ping();
-
-            try
-            {
-                PingReply reply = ping.Send(address, 2000);
-                if (reply != null && reply.Status == IPStatus.Success)
-                {
-                    return DateTime.Now;
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
-            return null;
-        }
-
-        public static string GetUserIP(HttpContext context)
-        {
-
-            return context.Connection.RemoteIpAddress.ToString();
-        }
-
-        public static ProxyTest GetConnectivityInfo(Proxy proxy, ProxyTestServer proxyTestServers)
-        {
-            var proxyTest = new ProxyTest();
-            proxyTest.ProxyTestServerId = proxyTestServers.Id;
-            proxyTest.ProxyId = proxy.Id;
-
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(proxyTestServers.Url);
-                request.Method = "GET";
-                request.Timeout = 10000;
-                WebProxy webProxy = new WebProxy(proxy.Ip, proxy.Port)
-                {
-                    BypassProxyOnLocal = false
-                };
-                request.Proxy = webProxy;
-
-                Stopwatch timer = new Stopwatch();
-                timer.Start();
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                timer.Stop();
-
-
-                proxyTest.StatusCode = response.StatusCode;
-
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    proxyTest.LastSuccessDate = DateTime.Now;
-                    proxyTest.ResponseTime = timer.Elapsed.Milliseconds;
-                }
-                else
-                {
-                    proxyTest.LastSuccessDate = null;
-                    proxyTest.ResponseTime = null;
-                }
-
-            }
-            catch (Exception exception)
-            {
-                proxyTest.LastSuccessDate = null;
-                proxyTest.ResponseTime = null;
-                proxyTest.StatusCode = HttpStatusCode.RequestTimeout;
-                // ignored
-            }
-            return proxyTest;
-        }
         private static string GetIp(string ipString)
         {
             try
@@ -134,7 +62,6 @@ namespace ProxyBanken.Helper
             }
 
         }
-
         private static int GetPort(string portString)
         {
             try
@@ -154,35 +81,24 @@ namespace ProxyBanken.Helper
             {
                 return 80;
             }
-
         }
 
-        public static IList<ProxyTest> TestProxies(IList<Proxy> proxyList, IEnumerable<ProxyTestServer> getTestUrls)
+        public static DateTime? Ping(string address)
         {
-            var proxyTestList = new List<ProxyTest>();
-
-            Parallel.ForEach(proxyList, proxy =>
+            Ping ping = new Ping();
+            try
             {
-                foreach (var testUrl in getTestUrls.AsParallel())
+                PingReply reply = ping.Send(address, 2000);
+                if (reply != null && reply.Status == IPStatus.Success)
                 {
-                    proxyTestList.Add(GetConnectivityInfo(proxy, testUrl));
+                    return DateTime.Now;
                 }
-            });
-
-            return proxyTestList;
-        }
-
-        public static IList<ProxyTest> TestProxy(Proxy proxy, IEnumerable<ProxyTestServer> getTestUrls)
-        {
-            var proxyTestList = new List<ProxyTest>();
-
-            foreach (var testUrl in getTestUrls.AsParallel())
-            {
-                var proxyTest = GetConnectivityInfo(proxy, testUrl);
-                proxyTestList.Add(proxyTest);
             }
-
-            return proxyTestList;
+            catch
+            {
+                // ignored
+            }
+            return null;
         }
 
         /// <summary>
@@ -237,8 +153,6 @@ namespace ProxyBanken.Helper
                             return ProxyAnonymity.Elite;
                         }
                     }
-
-
                 }
             }
             catch (Exception ex)
@@ -250,6 +164,77 @@ namespace ProxyBanken.Helper
             }
             return ProxyAnonymity.Unknown;
 
+        }
+        public static IList<ProxyTest> TestProxies(IList<Proxy> proxyList, IEnumerable<ProxyTestServer> testServers)
+        {
+            var proxyTestList = new List<ProxyTest>();
+
+            Parallel.ForEach(proxyList, proxy =>
+            {
+                proxyTestList = TestProxy(proxy, testServers);
+            });
+
+            return proxyTestList;
+        }
+
+        public static List<ProxyTest> TestProxy(Proxy proxy, IEnumerable<ProxyTestServer> getTestUrls)
+        {
+            var proxyTestList = new List<ProxyTest>();
+
+            foreach (var testUrl in getTestUrls.AsParallel())
+            {
+                var proxyTest = GetConnectivityInfo(proxy, testUrl);
+                proxyTestList.Add(proxyTest);
+            }
+
+            return proxyTestList;
+        }
+        public static ProxyTest GetConnectivityInfo(Proxy proxy, ProxyTestServer proxyTestServers)
+        {
+            var proxyTest = new ProxyTest
+            {
+                ProxyTestServerId = proxyTestServers.Id,
+                ProxyId = proxy.Id
+            };
+
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(proxyTestServers.Url);
+                request.Method = "GET";
+                request.Timeout = 10000;
+                WebProxy webProxy = new WebProxy(proxy.Ip, proxy.Port)
+                {
+                    BypassProxyOnLocal = false
+                };
+                request.Proxy = webProxy;
+
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                timer.Stop();
+
+
+                proxyTest.StatusCode = response.StatusCode;
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    proxyTest.LastSuccessDate = DateTime.Now;
+                    proxyTest.ResponseTime = timer.Elapsed.Milliseconds;
+                }
+                else
+                {
+                    proxyTest.LastSuccessDate = null;
+                    proxyTest.ResponseTime = null;
+                }
+
+            }
+            catch (Exception)
+            {
+                proxyTest.LastSuccessDate = null;
+                proxyTest.ResponseTime = null;
+                proxyTest.StatusCode = HttpStatusCode.RequestTimeout;
+            }
+            return proxyTest;
         }
 
 

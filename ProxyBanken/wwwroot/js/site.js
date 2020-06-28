@@ -8,7 +8,7 @@ $(document).on('click', "#configuration", function () {
 
 $("#modalSave").on('click', function () {
     var form = $("#modalBody").find('form');
-    console.log(form.serialize());
+    
     $.ajax({
         url: $(form).attr('action'),
         data: form.serialize(),

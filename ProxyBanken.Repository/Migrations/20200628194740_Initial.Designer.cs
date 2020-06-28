@@ -10,8 +10,8 @@ using ProxyBanken.Repository;
 namespace ProxyBanken.Repository.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200625154037_2020062501")]
-    partial class _2020062501
+    [Migration("20200628194740_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,7 +32,8 @@ namespace ProxyBanken.Repository.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
@@ -67,14 +68,12 @@ namespace ProxyBanken.Repository.Migrations
                     b.Property<int>("Anonymity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BaseUrlId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Ip")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(15);
 
                     b.Property<DateTime?>("LastFunctionalityTestDate")
                         .HasColumnType("datetime2");
@@ -85,9 +84,12 @@ namespace ProxyBanken.Repository.Migrations
                     b.Property<int>("Port")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProviderId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("BaseUrlId");
+                    b.HasIndex("ProviderId");
 
                     b.HasIndex("Ip", "Port")
                         .IsUnique()
@@ -107,7 +109,8 @@ namespace ProxyBanken.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpQuery")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(4000)")
+                        .HasMaxLength(4000);
 
                     b.Property<DateTime?>("LastFetchOn")
                         .HasColumnType("datetime2");
@@ -116,13 +119,17 @@ namespace ProxyBanken.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PortQuery")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(4000)")
+                        .HasMaxLength(4000);
 
                     b.Property<string>("RowQuery")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(4000)")
+                        .HasMaxLength(4000);
 
                     b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
@@ -187,10 +194,10 @@ namespace ProxyBanken.Repository.Migrations
                     b.Property<int>("ProxyTestServerId")
                         .HasColumnType("int");
 
-                    b.Property<double>("ResponseTime")
+                    b.Property<double?>("ResponseTime")
                         .HasColumnType("float");
 
-                    b.Property<int>("StatusCode")
+                    b.Property<int?>("StatusCode")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -210,10 +217,14 @@ namespace ProxyBanken.Repository.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
 
                     b.HasKey("Id");
 
@@ -242,9 +253,9 @@ namespace ProxyBanken.Repository.Migrations
 
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.Proxy", b =>
                 {
-                    b.HasOne("ProxyBanken.DataAccess.Entity.ProxyProvider", "BaseUrl")
+                    b.HasOne("ProxyBanken.DataAccess.Entity.ProxyProvider", "Provider")
                         .WithMany("Proxies")
-                        .HasForeignKey("BaseUrlId");
+                        .HasForeignKey("ProviderId");
                 });
 
             modelBuilder.Entity("ProxyBanken.DataAccess.Entity.ProxyTest", b =>

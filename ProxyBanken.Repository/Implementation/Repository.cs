@@ -2,8 +2,10 @@
 using ProxyBanken.DataAccess.Entity;
 using ProxyBanken.Infrastructure.Model;
 using ProxyBanken.Repository.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProxyBanken.Repository.Implementation
@@ -45,7 +47,19 @@ namespace ProxyBanken.Repository.Implementation
         }
         public int SaveChanges()
         {
-            return _context.SaveChanges();
+            try
+            {
+
+                return _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                //Thread.Sleep(10000);
+                //return SaveChanges();
+                return -1;
+            }
+
         }
 
         public int Insert(T entity)

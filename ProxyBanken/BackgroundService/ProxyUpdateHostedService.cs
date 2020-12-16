@@ -36,7 +36,7 @@ namespace ProxyBanken.BackgroundService
                 var ProxyTestServerService = serviceProvider.GetRequiredService<IProxyTestServerService>();
                 var testServers = ProxyTestServerService.GetTestProxies();
 
-                Parallel.ForEach(serviceProviders, provider =>
+                foreach(var provider in serviceProviders)
                 {
                     try
                     {
@@ -55,6 +55,7 @@ namespace ProxyBanken.BackgroundService
                                 var proxyTestService = serviceProvider.GetRequiredService<IProxyTestService>();
                                 proxyTestService.BatchCreateOrUpdate(proxyTestResults);
                             }
+                            
                         }
                     }
                     catch (Exception ex)
@@ -65,7 +66,7 @@ namespace ProxyBanken.BackgroundService
 
                     proxyProviderService.Update(provider);
 
-                });
+                };
                 proxyProviderService.SaveChanges();
                 await Task.Delay(TimeSpan.FromMinutes(double.Parse(configService.GetByName("ProxyUpdateInterval").Value)), stoppingToken);
             }

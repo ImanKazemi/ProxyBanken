@@ -108,7 +108,7 @@ $(document).ready(function () {
     });
 
     function format(d) {
-        var html = "<div id='test_" + d.id + "'>s</div>"
+        var html = "<div id='test_" + d.id + "'>Loading...</div>"
         $.get("/api/ProxyTestApi?proxyId=" + d.id, function (data) {
             var table = '<table class="table"><thead><tr><th>Server Name</th><th>Success Date</th><th>Status</th><th>Response Time(ms)</th></tr></thead><tbody>';
             for (var i = 0; i < data.length; i++) {

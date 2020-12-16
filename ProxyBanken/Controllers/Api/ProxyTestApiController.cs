@@ -53,6 +53,7 @@ namespace ProxyBanken.Controllers.Api
                 var proxyTests = ProxyHelper.TestProxy(proxy, testServers);
 
                 _proxyTestService.BatchCreateOrUpdate(proxyTests);
+               
                 _proxyService.Update(proxy);
 
                 return HttpStatusCode.OK;

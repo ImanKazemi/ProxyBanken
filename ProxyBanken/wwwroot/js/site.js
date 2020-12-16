@@ -27,9 +27,11 @@ $("#modalSave").on('click', function () {
 });
 
 $('body').on('click', '[data-toggle="modal"]', function () {
-    startLoading()
+    $($(this).data("target") + ' .modal-body').html("");
+    startLoading();
     $($(this).data("target") + ' .modal-body').load($(this).data("remote"));
     $($(this).data("target") + ' .modal-title').text($(this).text());
+    completeLoading();
 })
 
 function completeLoading() {
